@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Sam Wilson"
+		]
+	},
+	"wikibasefetcher": "WikibaseFetcher",
+	"wikibasefetcher-desc": "A Lua module to fetch data from Wikibase wikis."
+}

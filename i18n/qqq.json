@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Sam Wilson"
+		]
+	},
+	"wikibasefetcher": "The name of the extension.",
+	"wikibasefetcher-desc": "{{desc|name=WikibaseFetcher|url=https://www.mediawiki.org/wiki/Extension:WikibaseFetcher}}"
+}

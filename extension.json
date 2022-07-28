@@ -1,0 +1,29 @@
+{
+	"name": "WikibaseFetcher",
+	"author": [
+		"[https://samwilson.id.au/ Sam Wilson]"
+	],
+	"license-name": "GPL-2.0-or-later",
+	"namemsg": "wikibasefetcher",
+	"descriptionmsg": "wikibasefetcher-desc",
+	"url": "https://www.mediawiki.org/wiki/Extension:WikibaseFetcher",
+	"type": "other",
+	"requires": {
+		"MediaWiki": ">= 1.38"
+	},
+	"MessagesDirs": {
+		"WikibaseFetcher": [
+			"i18n"
+		]
+	},
+	"ExtensionMessagesFiles": {
+		"WikibaseFetcherMagicWords": "WikibaseFetcher.i18n.magic.php"
+	},
+	"AutoloadNamespaces": {
+		"MediaWiki\\Extension\\WikibaseFetcher\\": "includes/"
+	},
+	"Hooks": {
+		"ScribuntoExternalLibraries": "MediaWiki\\Extension\\WikibaseFetcher\\Hooks::onScribuntoExternalLibraries"
+	},
+	"manifest_version": 2
+}
