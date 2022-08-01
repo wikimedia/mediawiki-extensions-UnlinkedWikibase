@@ -5,5 +5,9 @@
 		]
 	},
 	"wikibasefetcher": "WikibaseFetcher",
-	"wikibasefetcher-desc": "A Lua module to fetch data from Wikibase wikis."
+	"wikibasefetcher-desc": "A Lua module to fetch data from Wikibase wikis.",
+	"wikibasefetcher-error-label": "WikibaseFetcher error:",
+	"wikibasefetcher-error-missing-id": "The 'id' parameter must be supplied.",
+	"wikibasefetcher-error-invalid-id": "ID '$1' is not in the required format of an integer prefixed with 'Q'.",
+	"wikibase-fetcher-infoaction-label": "Wikibase entity ID"
 }

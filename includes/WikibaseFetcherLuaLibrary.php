@@ -19,6 +19,7 @@ class WikibaseFetcherLuaLibrary extends Scribunto_LuaLibraryBase {
 	public function register(): array {
 		$interfaceFuncs = [
 			'getEntity' => [ $this, 'getEntity' ],
+			'getLocalTitle' => [ $this, 'getLocalTitle' ],
 		];
 		$luaFile = dirname( __DIR__ ) . '/scribunto/wikibasefetcher.lua';
 		return $this->getEngine()->registerInterface( $luaFile, $interfaceFuncs );
@@ -53,5 +54,24 @@ class WikibaseFetcherLuaLibrary extends Scribunto_LuaLibraryBase {
 			return $responseData['entities'][$id] ?: [];
 		}
 		return [];
+	}
+
+	/**
+	 * Get a page ID that is linked to the given entity.
+	 *
+	 * @param string $id Wikibase entity ID.
+	 * @return array
+	 */
+	public function getLocalPageId( string $id ) {
+		$dbr = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getConnection( DB_REPLICA );
+		$where = [
+			'pp_value' => $id,
+			'pp_propname' => 'wikibase_fetcher_id'
+		];
+		$options = [ 'limit' => 1 ];
+		$pageId = $dbr->selectField( 'page_props', 'pp_page', $where, __METHOD__, $options );
+		return [ 'result' => (int)$pageId ];
 	}
 }

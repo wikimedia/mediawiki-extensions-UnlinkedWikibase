@@ -17,13 +17,20 @@
 		]
 	},
 	"ExtensionMessagesFiles": {
-		"WikibaseFetcherMagicWords": "WikibaseFetcher.i18n.magic.php"
+		"WikibaseFetcherMagic": "WikibaseFetcher.i18n.magic.php"
 	},
 	"AutoloadNamespaces": {
 		"MediaWiki\\Extension\\WikibaseFetcher\\": "includes/"
 	},
 	"Hooks": {
-		"ScribuntoExternalLibraries": "MediaWiki\\Extension\\WikibaseFetcher\\Hooks::onScribuntoExternalLibraries"
+		"ScribuntoExternalLibraries": "MediaWiki\\Extension\\WikibaseFetcher\\Hooks::onScribuntoExternalLibraries",
+		"ParserFirstCallInit": "main",
+		"InfoAction": "main"
+	},
+	"HookHandlers": {
+		"main": {
+			"class": "MediaWiki\\Extension\\WikibaseFetcher\\Hooks"
+		}
 	},
 	"manifest_version": 2
 }
