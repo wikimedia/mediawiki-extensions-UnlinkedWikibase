@@ -27,4 +27,12 @@ function wikibasefetcher.getEntity( id )
 	return php.getEntity( id );
 end
 
+-- --
+-- Get the local title.
+-- @param string entityId Wikibase entity ID, starting with 'Q'.
+-- --
+function wikibasefetcher.getLocalTitle( entityId )
+	return mw.title.new( php.getLocalPageId( entityId ) );
+end
+
 return wikibasefetcher
