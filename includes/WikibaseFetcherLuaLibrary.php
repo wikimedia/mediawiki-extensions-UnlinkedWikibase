@@ -7,6 +7,9 @@ use Scribunto_LuaLibraryBase;
 
 class WikibaseFetcherLuaLibrary extends Scribunto_LuaLibraryBase {
 
+	/** @var mixed[] Runtime cache of fetched entities. */
+	private $entities;
+
 	/**
 	 * Called to register the library.
 	 *
@@ -45,13 +48,17 @@ class WikibaseFetcherLuaLibrary extends Scribunto_LuaLibraryBase {
 	 * @return mixed[]
 	 */
 	protected function fetch( $id ) {
+		if ( isset( $this->entities[$id] ) ) {
+			return $this->entities[$id];
+		}
 		$requestFactory = MediaWikiServices::getInstance()->getHttpRequestFactory();
 		// @todo Make remote URL configurable.
 		$url = "https://www.wikidata.org/wiki/Special:EntityData/$id.json";
 		$response = $requestFactory->request( 'GET', $url );
 		if ( $response ) {
 			$responseData = json_decode( $response, true );
-			return $responseData['entities'][$id] ?: [];
+			$this->entities[$id] = $responseData['entities'][$id] ?: null;
+			return $this->entities[$id];
 		}
 		return [];
 	}
