@@ -4,7 +4,7 @@
 			"Sam Wilson"
 		]
 	},
-	"wikibasefetcher": "The name of the extension.",
-	"wikibasefetcher-desc": "{{desc|name=WikibaseFetcher|url=https://www.mediawiki.org/wiki/Extension:WikibaseFetcher}}",
-	"wikibasefetcher-invalid-id": "Error message displayed when an invalid entity ID is provided.\n\nParameters:\n* $1 — The supplied ID value."
+	"unlinkedwikibase": "The name of the extension.",
+	"unlinkedwikibase-desc": "{{desc|name=UnlinkedWikibase|url=https://www.mediawiki.org/wiki/Extension:UnlinkedWikibase}}",
+	"unlinkedwikibase-invalid-id": "Error message displayed when an invalid entity ID is provided.\n\nParameters:\n* $1 — The supplied ID value."
 }

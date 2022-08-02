@@ -4,10 +4,10 @@
 			"Sam Wilson"
 		]
 	},
-	"wikibasefetcher": "WikibaseFetcher",
-	"wikibasefetcher-desc": "A Lua module to fetch data from Wikibase wikis.",
-	"wikibasefetcher-error-label": "WikibaseFetcher error:",
-	"wikibasefetcher-error-missing-id": "The 'id' parameter must be supplied.",
-	"wikibasefetcher-error-invalid-id": "ID '$1' is not in the required format of an integer prefixed with 'Q'.",
-	"wikibase-fetcher-infoaction-label": "Wikibase entity ID"
+	"unlinkedwikibase": "UnlinkedWikibase",
+	"unlinkedwikibase-desc": "A Lua module to connect a wiki's pages to, and fetch data from, an external Wikibase wiki (such as Wikidata).",
+	"unlinkedwikibase-error-label": "UnlinkedWikibase error:",
+	"unlinkedwikibase-error-missing-id": "The 'id' parameter must be supplied.",
+	"unlinkedwikibase-error-invalid-id": "ID '$1' is not in the required format of an integer prefixed with 'Q'.",
+	"unlinkedwikibase-infoaction-label": "Wikibase entity ID"
 }

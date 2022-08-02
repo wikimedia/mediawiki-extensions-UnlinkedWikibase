@@ -1,11 +1,11 @@
 <?php
 
-namespace MediaWiki\Extension\WikibaseFetcher;
+namespace MediaWiki\Extension\UnlinkedWikibase;
 
 use MediaWiki\MediaWikiServices;
 use Scribunto_LuaLibraryBase;
 
-class WikibaseFetcherLuaLibrary extends Scribunto_LuaLibraryBase {
+class UnlinkedWikibaseLuaLibrary extends Scribunto_LuaLibraryBase {
 
 	/** @var mixed[] Runtime cache of fetched entities. */
 	private $entities;
@@ -24,7 +24,7 @@ class WikibaseFetcherLuaLibrary extends Scribunto_LuaLibraryBase {
 			'getEntity' => [ $this, 'getEntity' ],
 			'getLocalPageId' => [ $this, 'getLocalPageId' ],
 		];
-		$luaFile = dirname( __DIR__ ) . '/scribunto/wikibasefetcher.lua';
+		$luaFile = dirname( __DIR__ ) . '/scribunto/UnlinkedWikibase.lua';
 		return $this->getEngine()->registerInterface( $luaFile, $interfaceFuncs );
 	}
 
@@ -75,7 +75,7 @@ class WikibaseFetcherLuaLibrary extends Scribunto_LuaLibraryBase {
 			->getConnection( DB_REPLICA );
 		$where = [
 			'pp_value' => $id,
-			'pp_propname' => 'wikibase_fetcher_id'
+			'pp_propname' => 'unlinkedwikibase_id'
 		];
 		$options = [ 'limit' => 1 ];
 		$pageId = $dbr->selectField( 'page_props', 'pp_page', $where, __METHOD__, $options );
