@@ -22,7 +22,7 @@ class WikibaseFetcherLuaLibrary extends Scribunto_LuaLibraryBase {
 	public function register(): array {
 		$interfaceFuncs = [
 			'getEntity' => [ $this, 'getEntity' ],
-			'getLocalTitle' => [ $this, 'getLocalTitle' ],
+			'getLocalPageId' => [ $this, 'getLocalPageId' ],
 		];
 		$luaFile = dirname( __DIR__ ) . '/scribunto/wikibasefetcher.lua';
 		return $this->getEngine()->registerInterface( $luaFile, $interfaceFuncs );
