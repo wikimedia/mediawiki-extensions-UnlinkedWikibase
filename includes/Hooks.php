@@ -4,7 +4,7 @@
  * @license GPL-3.0-or-later
  */
 
-namespace MediaWiki\Extension\WikibaseFetcher;
+namespace MediaWiki\Extension\UnlinkedWikibase;
 
 use Html;
 use MediaWiki\Hook\InfoActionHook;
@@ -14,7 +14,7 @@ use Parser;
 use Wikimedia\ParamValidator\TypeDef\BooleanDef;
 
 /**
- * WikibaseFetcher extension hooks.
+ * UnlinkedWikibase extension hooks.
  */
 class Hooks implements ParserFirstCallInitHook, InfoActionHook {
 
@@ -25,7 +25,7 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook {
 	 */
 	public static function onScribuntoExternalLibraries( $engine, array &$libs ) {
 		if ( $engine === 'lua' ) {
-			$libs['mw.ext.wikibasefetcher'] = WikibaseFetcherLuaLibrary::class;
+			$libs['mw.ext.unlinkedwikibase'] = UnlinkedWikibaseLuaLibrary::class;
 		}
 	}
 
@@ -33,7 +33,7 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook {
 	 * @inheritDoc
 	 */
 	public function onParserFirstCallInit( $parser ) {
-		$parser->setFunctionHook( 'wikibase_fetcher', [ $this, 'renderParserFunction' ] );
+		$parser->setFunctionHook( 'unlinkedwikibase', [ $this, 'renderParserFunction' ] );
 		return true;
 	}
 
@@ -68,12 +68,12 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook {
 			}
 		}
 		if ( !isset( $params['id'] ) ) {
-			return $this->getError( 'wikibasefetcher-error-missing-id' );
+			return $this->getError( 'unlinkedwikibase-error-missing-id' );
 		}
 		if ( !preg_match( '/^Q[0-9]+$/', $params['id'] ) ) {
-			return $this->getError( 'wikibasefetcher-error-invalid-id', [ $params['id'] ] );
+			return $this->getError( 'unlinkedwikibase-error-invalid-id', [ $params['id'] ] );
 		}
-		$parser->getOutput()->setPageProperty( 'wikibase_fetcher_id', $params['id'] );
+		$parser->getOutput()->setPageProperty( 'unlinkedwikibase_id', $params['id'] );
 		return '';
 	}
 
@@ -84,7 +84,7 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook {
 	 * @return string The parser function response with the error message HTML.
 	 */
 	private function getError( string $msg, array $params = [] ) {
-		$label = wfMessage( 'wikibasefetcher-error-label' )->text();
+		$label = wfMessage( 'unlinkedwikibase-error-label' )->text();
 		$labelHtml = Html::element( 'strong', [], $label );
 		$err = wfMessage( $msg, $params )->text();
 		$out = Html::rawElement( 'span', [ 'class' => 'error' ], "$labelHtml $err" );
@@ -99,12 +99,12 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook {
 	public function onInfoAction( $context, &$pageInfo ) {
 		$props = MediaWikiServices::getInstance()
 			->getPageProps()
-			->getProperties( $context->getTitle(), 'wikibase_fetcher_id' );
+			->getProperties( $context->getTitle(), 'unlinkedwikibase_id' );
 		if ( !$props ) {
 			return true;
 		}
 		$pageInfo['header-basic'][] = [
-			wfMessage( 'wikibase-fetcher-infoaction-label' ),
+			wfMessage( 'unlinkedwikibase-infoaction-label' ),
 			array_shift( $props )
 		];
 		return true;

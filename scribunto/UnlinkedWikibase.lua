@@ -1,9 +1,9 @@
-local wikibasefetcher = {}
+local UnlinkedWikibase = {}
 local php
 
-function wikibasefetcher.setupInterface( options )
+function UnlinkedWikibase.setupInterface( options )
 	-- Remove setup function.
-	wikibasefetcher.setupInterface = nil
+	UnlinkedWikibase.setupInterface = nil
 
 	-- Copy the PHP callbacks to a local variable, and remove the global.
 	php = mw_interface
@@ -12,10 +12,10 @@ function wikibasefetcher.setupInterface( options )
 	-- Install into the mw global.
 	mw = mw or {}
 	mw.ext = mw.ext or {}
-	mw.ext.wikibasefetcher = wikibasefetcher
+	mw.ext.UnlinkedWikibase = UnlinkedWikibase
 
 	-- Indicate that we're loaded.
-	package.loaded['mw.ext.wikibasefetcher'] = wikibasefetcher
+	package.loaded['mw.ext.UnlinkedWikibase'] = UnlinkedWikibase
 end
 
 -- --
@@ -23,7 +23,7 @@ end
 -- @param string id Wikibase entity ID, starting with 'Q'.
 -- @return table Whatever is returned by the Wikibase API.
 -- --
-function wikibasefetcher.getEntity( id )
+function UnlinkedWikibase.getEntity( id )
 	return php.getEntity( id );
 end
 
@@ -31,8 +31,8 @@ end
 -- Get the local title.
 -- @param string entityId Wikibase entity ID, starting with 'Q'.
 -- --
-function wikibasefetcher.getLocalTitle( entityId )
+function UnlinkedWikibase.getLocalTitle( entityId )
 	return mw.title.new( php.getLocalPageId( entityId ) );
 end
 
-return wikibasefetcher
+return UnlinkedWikibase

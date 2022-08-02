@@ -1,35 +1,35 @@
 {
-	"name": "WikibaseFetcher",
+	"name": "UnlinkedWikibase",
 	"author": [
 		"[https://samwilson.id.au/ Sam Wilson]"
 	],
 	"license-name": "GPL-2.0-or-later",
-	"namemsg": "wikibasefetcher",
-	"descriptionmsg": "wikibasefetcher-desc",
-	"url": "https://www.mediawiki.org/wiki/Extension:WikibaseFetcher",
+	"namemsg": "unlinkedwikibase",
+	"descriptionmsg": "unlinkedwikibase-desc",
+	"url": "https://www.mediawiki.org/wiki/Extension:UnlinkedWikibase",
 	"type": "other",
 	"requires": {
 		"MediaWiki": ">= 1.38"
 	},
 	"MessagesDirs": {
-		"WikibaseFetcher": [
+		"UnlinkedWikibase": [
 			"i18n"
 		]
 	},
 	"ExtensionMessagesFiles": {
-		"WikibaseFetcherMagic": "WikibaseFetcher.i18n.magic.php"
+		"UnlinkedWikibaseMagicWords": "UnlinkedWikibase.i18n.magic.php"
 	},
 	"AutoloadNamespaces": {
-		"MediaWiki\\Extension\\WikibaseFetcher\\": "includes/"
+		"MediaWiki\\Extension\\UnlinkedWikibase\\": "includes/"
 	},
 	"Hooks": {
-		"ScribuntoExternalLibraries": "MediaWiki\\Extension\\WikibaseFetcher\\Hooks::onScribuntoExternalLibraries",
+		"ScribuntoExternalLibraries": "MediaWiki\\Extension\\UnlinkedWikibase\\Hooks::onScribuntoExternalLibraries",
 		"ParserFirstCallInit": "main",
 		"InfoAction": "main"
 	},
 	"HookHandlers": {
 		"main": {
-			"class": "MediaWiki\\Extension\\WikibaseFetcher\\Hooks"
+			"class": "MediaWiki\\Extension\\UnlinkedWikibase\\Hooks"
 		}
 	},
 	"manifest_version": 2
