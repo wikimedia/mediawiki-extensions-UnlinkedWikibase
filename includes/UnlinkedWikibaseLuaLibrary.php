@@ -51,10 +51,10 @@ class UnlinkedWikibaseLuaLibrary extends Scribunto_LuaLibraryBase {
 		if ( isset( $this->entities[$id] ) ) {
 			return $this->entities[$id];
 		}
-		$requestFactory = MediaWikiServices::getInstance()->getHttpRequestFactory();
-		// @todo Make remote URL configurable.
-		$url = "https://www.wikidata.org/wiki/Special:EntityData/$id.json";
-		$response = $requestFactory->request( 'GET', $url );
+		$services = MediaWikiServices::getInstance();
+		$baseUrl = rtrim( $services->getMainConfig()->get( 'UnlinkedWikibaseBaseUrl' ), '/' );
+		$url = $baseUrl . "/Special:EntityData/$id.json";
+		$response = $services->getHttpRequestFactory()->request( 'GET', $url );
 		if ( $response ) {
 			$responseData = json_decode( $response, true );
 			$this->entities[$id] = $responseData['entities'][$id] ?: null;
