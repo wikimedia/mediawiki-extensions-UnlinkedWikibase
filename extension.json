@@ -32,5 +32,11 @@
 			"class": "MediaWiki\\Extension\\UnlinkedWikibase\\Hooks"
 		}
 	},
+	"config": {
+		"UnlinkedWikibaseBaseUrl": {
+			"description": "The base URL of the Wikibase site to use.",
+			"value": "https://www.wikidata.org/wiki/"
+		}
+	},
 	"manifest_version": 2
 }
