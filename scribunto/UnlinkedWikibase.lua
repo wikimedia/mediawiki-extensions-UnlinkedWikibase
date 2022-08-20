@@ -32,7 +32,19 @@ end
 -- @param string entityId Wikibase entity ID, starting with 'Q'.
 -- --
 function UnlinkedWikibase.getLocalTitle( entityId )
-	return mw.title.new( php.getLocalPageId( entityId ) );
+	local pageId = php.getLocalPageId( entityId )
+	if pageId == nil then
+		return nil
+	end
+	return mw.title.new( pageId );
+end
+
+-- --
+-- Fetch the results of a Sparql query from the Wikibase query service.
+-- @param string query The Sparql query to execute.
+-- --
+function UnlinkedWikibase.query( query )
+	return php.query( query );
 end
 
 return UnlinkedWikibase
