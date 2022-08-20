@@ -36,6 +36,10 @@
 		"UnlinkedWikibaseBaseUrl": {
 			"description": "The base URL of the Wikibase site to use.",
 			"value": "https://www.wikidata.org/wiki/"
+		},
+		"UnlinkedWikibaseBaseQueryEndpoint": {
+			"description": "The query service Sparql endpoint.",
+			"value": "https://query.wikidata.org/bigdata/namespace/wdq/sparql"
 		}
 	},
 	"manifest_version": 2
