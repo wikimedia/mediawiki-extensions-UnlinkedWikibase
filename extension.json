@@ -40,6 +40,10 @@
 		"UnlinkedWikibaseBaseQueryEndpoint": {
 			"description": "The query service Sparql endpoint.",
 			"value": "https://query.wikidata.org/bigdata/namespace/wdq/sparql"
+		},
+		"UnlinkedWikibaseQueryTTL": {
+			"description": "The cache lifetime (in seconds) for Sparql queries.",
+			"value": "3600"
 		}
 	},
 	"manifest_version": 2

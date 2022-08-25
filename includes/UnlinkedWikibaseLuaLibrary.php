@@ -6,6 +6,7 @@ use MediaWiki\Http\HttpRequestFactory;
 use MediaWiki\MediaWikiServices;
 use Scribunto_LuaEngine;
 use Scribunto_LuaLibraryBase;
+use WANObjectCache;
 
 class UnlinkedWikibaseLuaLibrary extends Scribunto_LuaLibraryBase {
 
@@ -18,6 +19,9 @@ class UnlinkedWikibaseLuaLibrary extends Scribunto_LuaLibraryBase {
 	/** @var mixed[] Runtime cache of fetched entities. */
 	private $entities;
 
+	/** @var WANObjectCache */
+	private $cache;
+
 	/**
 	 * @param Scribunto_LuaEngine $engine
 	 */
@@ -26,6 +30,7 @@ class UnlinkedWikibaseLuaLibrary extends Scribunto_LuaLibraryBase {
 		$services = MediaWikiServices::getInstance();
 		$this->config = $services->getMainConfig();
 		$this->requestFactory = $services->getHttpRequestFactory();
+		$this->cache = $services->getMainWANObjectCache();
 	}
 
 	/**
@@ -96,13 +101,23 @@ class UnlinkedWikibaseLuaLibrary extends Scribunto_LuaLibraryBase {
 		// Fetch the data.
 		$serviceUrl = $this->config->get( 'UnlinkedWikibaseBaseQueryEndpoint' );
 		$url = $serviceUrl . '?format=json&query=' . wfUrlencode( $query );
-		$this->getParser()->incrementExpensiveFunctionCount();
-		$result = $this->requestFactory->request( 'GET', $url );
-		// Handle returned JSON.
-		if ( $result === null ) {
-			return [];
-		}
-		$out = json_decode( $result, true );
+		$parser = $this->getParser();
+		$requestFactory = $this->requestFactory;
+		// Get cached result or send query to the remote query service.
+		$out = $this->cache->getWithSetCallback(
+			$this->cache->makeKey( 'ext-UnlinkedWikibase', $url ),
+			$this->config->get( 'UnlinkedWikibaseQueryTTL' ),
+			static function () use ( $url, $parser, $requestFactory ) {
+				$parser->incrementExpensiveFunctionCount();
+				$result = $requestFactory->request( 'GET', $url );
+				// Handle returned JSON.
+				if ( $result === null ) {
+					return [];
+				}
+				return json_decode( $result, true );
+			}
+		);
+
 		// Reformat the response for Scribunto.
 		return [ 'result' => $out ];
 	}
