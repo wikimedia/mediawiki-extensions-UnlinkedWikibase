@@ -62,29 +62,35 @@ class UnlinkedWikibaseLuaLibrary extends Scribunto_LuaLibraryBase {
 		if ( !preg_match( '/Q[0-9]+/', $id ) ) {
 			return [ 'error' => 'invalid-item-id' ];
 		}
-		return [ 'result' => $this->fetch( $id ) ];
+		$baseUrl = rtrim( $this->config->get( 'UnlinkedWikibaseBaseUrl' ), '/' );
+		$url = $baseUrl . "/Special:EntityData/$id.json";
+		$data = $this->fetch( $url, $this->cache::TTL_MINUTE );
+		return [ 'result' => $data['entities'][$id] ?? [] ];
 	}
 
 	/**
-	 * Fetch data from Wikibase.
+	 * Fetch JSON data from a URL.
 	 *
-	 * @param string $id Wikibase ID.
+	 * @param string $url URl to fetch.
+	 * @param int $ttl Cache lifetime in seconds.
 	 * @return mixed[]
 	 */
-	protected function fetch( $id ) {
-		if ( isset( $this->entities[$id] ) ) {
-			return $this->entities[$id];
-		}
-		$baseUrl = rtrim( $this->config->get( 'UnlinkedWikibaseBaseUrl' ), '/' );
-		$url = $baseUrl . "/Special:EntityData/$id.json";
-		$this->getParser()->incrementExpensiveFunctionCount();
-		$response = $this->requestFactory->request( 'GET', $url );
-		if ( $response ) {
-			$responseData = json_decode( $response, true );
-			$this->entities[$id] = $responseData['entities'][$id] ?: null;
-			return $this->entities[$id];
-		}
-		return [];
+	private function fetch( string $url, int $ttl ) {
+		$parser = $this->getParser();
+		$requestFactory = $this->requestFactory;
+		return $this->cache->getWithSetCallback(
+			$this->cache->makeKey( 'ext-UnlinkedWikibase', $url ),
+			$ttl,
+			static function () use ( $url, $parser, $requestFactory ) {
+				$parser->incrementExpensiveFunctionCount();
+				$result = $requestFactory->request( 'GET', $url );
+				// Handle returned JSON.
+				if ( $result === null ) {
+					return [];
+				}
+				return json_decode( $result, true );
+			}
+		);
 	}
 
 	/**
@@ -101,23 +107,7 @@ class UnlinkedWikibaseLuaLibrary extends Scribunto_LuaLibraryBase {
 		// Fetch the data.
 		$serviceUrl = $this->config->get( 'UnlinkedWikibaseBaseQueryEndpoint' );
 		$url = $serviceUrl . '?format=json&query=' . wfUrlencode( $query );
-		$parser = $this->getParser();
-		$requestFactory = $this->requestFactory;
-		// Get cached result or send query to the remote query service.
-		$out = $this->cache->getWithSetCallback(
-			$this->cache->makeKey( 'ext-UnlinkedWikibase', $url ),
-			$this->config->get( 'UnlinkedWikibaseQueryTTL' ),
-			static function () use ( $url, $parser, $requestFactory ) {
-				$parser->incrementExpensiveFunctionCount();
-				$result = $requestFactory->request( 'GET', $url );
-				// Handle returned JSON.
-				if ( $result === null ) {
-					return [];
-				}
-				return json_decode( $result, true );
-			}
-		);
-
+		$out = $this->fetch( $url, $this->config->get( 'UnlinkedWikibaseQueryTTL' ) );
 		// Reformat the response for Scribunto.
 		return [ 'result' => $out ];
 	}
