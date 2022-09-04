@@ -16,9 +16,6 @@ class UnlinkedWikibaseLuaLibrary extends Scribunto_LuaLibraryBase {
 	/** @var HttpRequestFactory */
 	private $requestFactory;
 
-	/** @var mixed[] Runtime cache of fetched entities. */
-	private $entities;
-
 	/** @var WANObjectCache */
 	private $cache;
 
@@ -59,7 +56,7 @@ class UnlinkedWikibaseLuaLibrary extends Scribunto_LuaLibraryBase {
 	 * @return mixed[] A result array with 'result' or 'error' key.
 	 */
 	public function getEntity( $id ): array {
-		if ( !preg_match( '/Q[0-9]+/', $id ) ) {
+		if ( !preg_match( '/[QPL][0-9]+/', $id ) ) {
 			return [ 'error' => 'invalid-item-id' ];
 		}
 		$baseUrl = rtrim( $this->config->get( 'UnlinkedWikibaseBaseUrl' ), '/' );
