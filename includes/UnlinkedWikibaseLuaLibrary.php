@@ -116,16 +116,24 @@ class UnlinkedWikibaseLuaLibrary extends Scribunto_LuaLibraryBase {
 	 * @return array
 	 */
 	public function getLocalPageId( string $id ) {
-		$dbr = MediaWikiServices::getInstance()
-			->getDBLoadBalancer()
-			->getConnection( DB_REPLICA );
-		$where = [
-			'pp_value' => $id,
-			'pp_propname' => 'unlinkedwikibase_id'
-		];
-		$options = [ 'limit' => 1 ];
-		$this->getParser()->incrementExpensiveFunctionCount();
-		$pageId = $dbr->selectField( 'page_props', 'pp_page', $where, __METHOD__, $options );
-		return [ 'result' => (int)$pageId ];
+		$parser = $this->getParser();
+		$method = __METHOD__;
+		return $this->cache->getWithSetCallback(
+			$this->cache->makeKey( 'ext-UnlinkedWikibase', $method, $id ),
+			WANObjectCache::TTL_MINUTE * 5,
+			static function () use ( $id, $parser, $method ) {
+				$dbr = MediaWikiServices::getInstance()
+					->getDBLoadBalancer()
+					->getConnection( DB_REPLICA );
+				$where = [
+					'pp_value' => $id,
+					'pp_propname' => 'unlinkedwikibase_id'
+				];
+				$options = [ 'limit' => 1 ];
+				$parser->incrementExpensiveFunctionCount();
+				$pageId = $dbr->selectField( 'page_props', 'pp_page', $where, $method, $options );
+				return [ 'result' => (int)$pageId ];
+			}
+		);
 	}
 }
