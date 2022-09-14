@@ -2,6 +2,23 @@
 	"name": "samwilson/unlinked-wikibase",
 	"description": "MediaWiki extension providing access to Wikibase entities from wikis that are not linked to a Wikibase site.",
 	"license": "gpl-2.0-or-later",
+	"type": "mediawiki-extension",
+	"homepage": "https://www.mediawiki.org/wiki/Extension:UnlinkedWikibase",
+	"keywords": [
+		"MediaWiki",
+		"Wikibase"
+	],
+	"authors": [
+		{
+			"name": "Sam Wilson",
+			"homepage": "https://samwilson.id.au",
+			"role": "developer"
+		}
+	],
+	"support": {
+		"issues": "https://phabricator.wikimedia.org/tag/mediawiki-extensions-unlinkedwikibase",
+		"source": "https://gerrit.wikimedia.org/r/mediawiki/extensions/UnlinkedWikibase"
+	},
 	"require-dev": {
 		"mediawiki/mediawiki-codesniffer": "^39.0",
 		"mediawiki/minus-x": "^1.0",
