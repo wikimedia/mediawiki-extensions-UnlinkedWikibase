@@ -6,7 +6,7 @@
 	"license-name": "GPL-2.0-or-later",
 	"namemsg": "unlinkedwikibase",
 	"descriptionmsg": "unlinkedwikibase-desc",
-	"version": "1.0.0",
+	"version": "2.0.0",
 	"url": "https://www.mediawiki.org/wiki/Extension:UnlinkedWikibase",
 	"type": "other",
 	"requires": {
