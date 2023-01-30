@@ -1,4 +1,6 @@
 {
+	"name": "UnlinkedWikibase",
+	"private": true,
 	"devDependencies": {
 		"eslint-config-wikimedia": "0.22.1",
 		"grunt": "1.5.3",
