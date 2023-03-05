@@ -63,7 +63,27 @@ class UnlinkedWikibaseLuaLibrary extends Scribunto_LuaLibraryBase {
 		$baseUrl = rtrim( $this->config->get( 'UnlinkedWikibaseBaseUrl' ), '/' );
 		$url = $baseUrl . "/Special:EntityData/$id.json";
 		$data = $this->fetch( $url, $this->cache::TTL_MINUTE );
-		return [ 'result' => $data['entities'][$id] ?? [] ];
+		$entity = $data['entities'][$id] ?? [];
+		return [ 'result' => $this->arrayConvertToOneIndex( $entity ) ];
+	}
+
+	/**
+	 * Convert zero-indexed arrays to one-indexed, for use in Lua.
+	 *
+	 * @param mixed[] $in
+	 * @return mixed[]
+	 */
+	public function arrayConvertToOneIndex( array $in ) {
+		$isZeroIndexed = isset( $in[0] );
+		$out = [];
+		foreach ( $in as $key => $val ) {
+			if ( is_array( $val ) ) {
+				$val = $this->arrayConvertToOneIndex( $val );
+			}
+			$newKey = $isZeroIndexed && is_numeric( $key ) ? $key + 1 : $key;
+			$out[$newKey] = $val;
+		}
+		return $out;
 	}
 
 	/**
