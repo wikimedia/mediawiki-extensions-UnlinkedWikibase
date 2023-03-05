@@ -81,7 +81,7 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook {
 	 * Get an error message response.
 	 * @param string $msg The i18n message name.
 	 * @param string[] $params The parameters to use in the message.
-	 * @return string The parser function response with the error message HTML.
+	 * @return mixed[] The parser function response with the error message HTML.
 	 */
 	private function getError( string $msg, array $params = [] ) {
 		$label = wfMessage( 'unlinkedwikibase-error-label' )->text();

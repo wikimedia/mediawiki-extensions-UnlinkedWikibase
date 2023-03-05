@@ -2,6 +2,7 @@
 
 namespace MediaWiki\Extension\UnlinkedWikibase;
 
+use Config;
 use MediaWiki\Http\HttpRequestFactory;
 use MediaWiki\MediaWikiServices;
 use Scribunto_LuaEngine;
