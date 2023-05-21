@@ -20,7 +20,7 @@ class UnlinkedWikibaseLuaLibraryTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $out, $lib->arrayConvertToOneIndex( $in ) );
 	}
 
-	public function provideZeroIndexed() {
+	public static function provideZeroIndexed() {
 		return [
 			'simple' => [
 				[ 0 => 'a', 1 => 'b' ],
