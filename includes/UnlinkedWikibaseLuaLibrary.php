@@ -63,8 +63,9 @@ class UnlinkedWikibaseLuaLibrary extends Scribunto_LuaLibraryBase {
 		$baseUrl = rtrim( $this->config->get( 'UnlinkedWikibaseBaseUrl' ), '/' );
 		$url = $baseUrl . "/Special:EntityData/$id.json";
 		$data = $this->fetch( $url, $this->cache::TTL_MINUTE );
-		$entity = $data['entities'][$id] ?? [];
-		return [ 'result' => $this->arrayConvertToOneIndex( $entity ) ];
+		$result = $data['entities'] ?? [];
+		// Get the first value of the result (keyed by ID, which might be different to the ID requested).
+		return [ 'result' => $this->arrayConvertToOneIndex( reset( $result ) ) ];
 	}
 
 	/**
@@ -101,7 +102,7 @@ class UnlinkedWikibaseLuaLibrary extends Scribunto_LuaLibraryBase {
 			$ttl,
 			static function () use ( $url, $parser, $requestFactory ) {
 				$parser->incrementExpensiveFunctionCount();
-				$result = $requestFactory->request( 'GET', $url );
+				$result = $requestFactory->request( 'GET', $url, [ 'followRedirects' => true ] );
 				// Handle returned JSON.
 				if ( $result === null ) {
 					return [];
