@@ -3,7 +3,6 @@
 namespace MediaWiki\Extension\UnlinkedWikibase;
 
 use Config;
-use MediaWiki\Http\HttpRequestFactory;
 use MediaWiki\MediaWikiServices;
 use Scribunto_LuaEngine;
 use Scribunto_LuaLibraryBase;
@@ -14,11 +13,11 @@ class UnlinkedWikibaseLuaLibrary extends Scribunto_LuaLibraryBase {
 	/** @var Config */
 	private $config;
 
-	/** @var HttpRequestFactory */
-	private $requestFactory;
-
 	/** @var WANObjectCache */
 	private $cache;
+
+	/** @var Wikibase */
+	private $wikibase;
 
 	/**
 	 * @param Scribunto_LuaEngine $engine
@@ -27,8 +26,8 @@ class UnlinkedWikibaseLuaLibrary extends Scribunto_LuaLibraryBase {
 		parent::__construct( $engine );
 		$services = MediaWikiServices::getInstance();
 		$this->config = $services->getMainConfig();
-		$this->requestFactory = $services->getHttpRequestFactory();
 		$this->cache = $services->getMainWANObjectCache();
+		$this->wikibase = new Wikibase();
 	}
 
 	/**
@@ -60,12 +59,12 @@ class UnlinkedWikibaseLuaLibrary extends Scribunto_LuaLibraryBase {
 		if ( !preg_match( '/[QPL][0-9]+/', $id ) ) {
 			return [ 'error' => 'invalid-item-id' ];
 		}
-		$baseUrl = rtrim( $this->config->get( 'UnlinkedWikibaseBaseUrl' ), '/' );
-		$url = $baseUrl . "/Special:EntityData/$id.json";
-		$data = $this->fetch( $url, $this->cache::TTL_MINUTE );
-		$result = $data['entities'] ?? [];
+		$entity = $this->wikibase->getEntity( $this->getParser(), $id );
+		if ( $entity === null ) {
+			return [ 'error' => 'item-not-found' ];
+		}
 		// Get the first value of the result (keyed by ID, which might be different to the ID requested).
-		return [ 'result' => $this->arrayConvertToOneIndex( reset( $result ) ) ];
+		return [ 'result' => $this->arrayConvertToOneIndex( $entity ) ];
 	}
 
 	/**
@@ -88,31 +87,6 @@ class UnlinkedWikibaseLuaLibrary extends Scribunto_LuaLibraryBase {
 	}
 
 	/**
-	 * Fetch JSON data from a URL.
-	 *
-	 * @param string $url URl to fetch.
-	 * @param int $ttl Cache lifetime in seconds.
-	 * @return mixed[]
-	 */
-	private function fetch( string $url, int $ttl ) {
-		$parser = $this->getParser();
-		$requestFactory = $this->requestFactory;
-		return $this->cache->getWithSetCallback(
-			$this->cache->makeKey( 'ext-UnlinkedWikibase', $url ),
-			$ttl,
-			static function () use ( $url, $parser, $requestFactory ) {
-				$parser->incrementExpensiveFunctionCount();
-				$result = $requestFactory->request( 'GET', $url, [ 'followRedirects' => true ] );
-				// Handle returned JSON.
-				if ( $result === null ) {
-					return [];
-				}
-				return json_decode( $result, true );
-			}
-		);
-	}
-
-	/**
 	 * Fetch data from a Wikibase query service.
 	 *
 	 * @param ?string $query The Sparql query to execute.
@@ -126,7 +100,7 @@ class UnlinkedWikibaseLuaLibrary extends Scribunto_LuaLibraryBase {
 		// Fetch the data.
 		$serviceUrl = $this->config->get( 'UnlinkedWikibaseBaseQueryEndpoint' );
 		$url = $serviceUrl . '?format=json&query=' . wfUrlencode( $query );
-		$out = $this->fetch( $url, $this->config->get( 'UnlinkedWikibaseQueryTTL' ) );
+		$out = $this->wikibase->fetch( $this->getParser(), $url, $this->config->get( 'UnlinkedWikibaseQueryTTL' ) );
 		// Reformat the response for Scribunto.
 		return [ 'result' => $out ];
 	}

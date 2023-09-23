@@ -9,5 +9,6 @@
 	"unlinkedwikibase-error-label": "UnlinkedWikibase error:",
 	"unlinkedwikibase-error-missing-id": "The 'id' parameter must be supplied.",
 	"unlinkedwikibase-error-invalid-id": "ID '$1' is not in the required format of an integer prefixed with 'Q'.",
+	"unlinkedwikibase-error-property-name-not-found": "Property '$1' could not be found.",
 	"unlinkedwikibase-infoaction-label": "Wikibase entity ID"
 }

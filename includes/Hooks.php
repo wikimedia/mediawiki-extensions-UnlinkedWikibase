@@ -6,9 +6,9 @@
 
 namespace MediaWiki\Extension\UnlinkedWikibase;
 
-use Html;
 use MediaWiki\Hook\InfoActionHook;
 use MediaWiki\Hook\ParserFirstCallInitHook;
+use MediaWiki\Html\Html;
 use MediaWiki\MediaWikiServices;
 use Parser;
 use Wikimedia\ParamValidator\TypeDef\BooleanDef;
@@ -33,20 +33,53 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook {
 	 * @inheritDoc
 	 */
 	public function onParserFirstCallInit( $parser ) {
-		$parser->setFunctionHook( 'unlinkedwikibase', [ $this, 'renderParserFunction' ] );
+		$parser->setFunctionHook( 'unlinkedwikibase', [ $this, 'renderMainParserFunction' ] );
+		$parser->setFunctionHook( 'statements', [ $this, 'renderStatements' ] );
 		return true;
 	}
 
 	/**
-	 * Render the output of the parser function.
-	 * The input parameters are wikitext with templates expanded.
-	 * The output should be wikitext too.
-	 * @param Parser $parser The parser.
-	 * @return string|mixed[] The wikitext with which to replace the parser function call.
+	 * @param Parser $parser
+	 * @return mixed
 	 */
-	public function renderParserFunction( Parser $parser ) {
+	public function renderStatements( Parser $parser ) {
+		$params = $this->getParserFunctionArgs( func_get_args() );
+		if ( !isset( $params[0] ) ) {
+			return $this->getError( 'unlinkedwikibase-error-missing-property' );
+		}
+		$entityId = !empty( $params['from'] )
+			? $params['from']
+			: $parser->getOutput()->getPageProperty( 'unlinkedwikibase_id' );
+		if ( !$entityId ) {
+			return $this->getError( 'unlinkedwikibase-error-statements-entity-not-set' );
+		}
+
+		$wikibase = new Wikibase();
+		$propName = $params[0] ?? '';
+		$propId = $wikibase->getPropertyId( $parser, $propName );
+		if ( !$propId ) {
+			return $this->getError( 'unlinkedwikibase-error-property-name-not-found', [ $propName ] );
+		}
+
+		$entity = $wikibase->getEntity( $parser, $entityId );
+		if ( !isset( $entity['claims'][$propId] ) ) {
+			// No claim for this property.
+			return "<!-- No $propName ($propId) property found for $entityId -->";
+		}
+		$vals = [];
+		foreach ( $entity['claims'][$propId] as $claim ) {
+			$vals[] = $wikibase->formatClaimAsWikitext( $claim );
+		}
+		$out = $parser->getContentLanguage()->listToText( $vals );
+		return Html::rawElement( 'div', [ 'class' => 'ext-UnlinkedWikibase-statements' ], $out );
+	}
+
+	/**
+	 * @param mixed[] $args
+	 * @return string[]
+	 */
+	private function getParserFunctionArgs( array $args ) {
 		$params = [];
-		$args = func_get_args();
 		// Remove $parser from the args.
 		array_shift( $args );
 		foreach ( $args as $arg ) {
@@ -67,6 +100,18 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook {
 				$params[] = $arg;
 			}
 		}
+		return $params;
+	}
+
+	/**
+	 * Render the output of the parser function.
+	 * The input parameters are wikitext with templates expanded.
+	 * The output should be wikitext too.
+	 * @param Parser $parser The parser.
+	 * @return string|mixed[] The wikitext with which to replace the parser function call.
+	 */
+	public function renderMainParserFunction( Parser $parser ) {
+		$params = $this->getParserFunctionArgs( func_get_args() );
 		if ( !isset( $params['id'] ) ) {
 			return $this->getError( 'unlinkedwikibase-error-missing-id' );
 		}
