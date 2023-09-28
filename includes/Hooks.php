@@ -71,7 +71,7 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook {
 			$vals[] = $wikibase->formatClaimAsWikitext( $claim );
 		}
 		$out = $parser->getContentLanguage()->listToText( $vals );
-		return Html::rawElement( 'div', [ 'class' => 'ext-UnlinkedWikibase-statements' ], $out );
+		return Html::rawElement( 'span', [ 'class' => 'ext-UnlinkedWikibase-statements' ], $out );
 	}
 
 	/**
