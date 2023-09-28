@@ -6,6 +6,7 @@
 
 namespace MediaWiki\Extension\UnlinkedWikibase;
 
+use MediaWiki\Config\Config;
 use MediaWiki\Hook\InfoActionHook;
 use MediaWiki\Hook\ParserFirstCallInitHook;
 use MediaWiki\Html\Html;
@@ -17,6 +18,12 @@ use Wikimedia\ParamValidator\TypeDef\BooleanDef;
  * UnlinkedWikibase extension hooks.
  */
 class Hooks implements ParserFirstCallInitHook, InfoActionHook {
+
+	private Config $config;
+
+	public function __construct( Config $mainConfig ) {
+		$this->config = $mainConfig;
+	}
 
 	/**
 	 * @link https://www.mediawiki.org/wiki/Extension:Scribunto/Hooks/ScribuntoExternalLibraries
@@ -34,7 +41,9 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook {
 	 */
 	public function onParserFirstCallInit( $parser ) {
 		$parser->setFunctionHook( 'unlinkedwikibase', [ $this, 'renderMainParserFunction' ] );
-		$parser->setFunctionHook( 'statements', [ $this, 'renderStatements' ] );
+		if ( $this->config->get( 'UnlinkedWikibaseStatementsParserFunc' ) ) {
+			$parser->setFunctionHook( 'statements', [ $this, 'renderStatements' ] );
+		}
 		return true;
 	}
 

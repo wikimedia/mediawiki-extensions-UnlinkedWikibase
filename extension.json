@@ -30,7 +30,10 @@
 	},
 	"HookHandlers": {
 		"main": {
-			"class": "MediaWiki\\Extension\\UnlinkedWikibase\\Hooks"
+			"class": "MediaWiki\\Extension\\UnlinkedWikibase\\Hooks",
+			"services": [
+				"MainConfig"
+			]
 		}
 	},
 	"config": {
@@ -45,6 +48,10 @@
 		"UnlinkedWikibaseQueryTTL": {
 			"description": "The cache lifetime (in seconds) for Sparql queries.",
 			"value": "3600"
+		},
+		"UnlinkedWikibaseStatementsParserFunc": {
+			"description": "Whether to enable the {{#statements:}} parser function.",
+			"value": false
 		}
 	},
 	"manifest_version": 2
