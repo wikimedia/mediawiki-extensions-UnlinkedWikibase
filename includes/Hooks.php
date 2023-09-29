@@ -6,7 +6,7 @@
 
 namespace MediaWiki\Extension\UnlinkedWikibase;
 
-use MediaWiki\Config\Config;
+use Config;
 use MediaWiki\Hook\InfoActionHook;
 use MediaWiki\Hook\ParserFirstCallInitHook;
 use MediaWiki\Html\Html;
