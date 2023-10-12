@@ -76,10 +76,21 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook {
 			return "<!-- No $propName ($propId) property found for $entityId -->";
 		}
 		$vals = [];
-		foreach ( $entity['claims'][$propId] as $claim ) {
-			$vals[] = $wikibase->formatClaimAsWikitext( $claim );
+		// Remove deprecated claims.
+		$claims = array_filter( $entity['claims'][$propId], static function ( $claim ) {
+			return $claim['rank'] !== 'deprecated';
+		} );
+		// Include only preferred claims if there are any.
+		$preferred = array_filter( $claims, static function ( $claim ) {
+			return $claim['rank'] === 'preferred';
+		} );
+		if ( count( $preferred ) > 0 ) {
+			$claims = $preferred;
 		}
-		$out = $parser->getContentLanguage()->listToText( $vals );
+		foreach ( $claims as $claim ) {
+			$vals[] = $wikibase->formatClaimAsWikitext( $parser, $claim );
+		}
+		$out = $parser->getContentLanguage()->listToText( array_filter( $vals ) );
 		return Html::rawElement( 'span', [ 'class' => 'ext-UnlinkedWikibase-statements' ], $out );
 	}
 

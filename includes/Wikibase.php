@@ -110,9 +110,9 @@ class Wikibase {
 	/**
 	 * Format a single claim according to the conventions of Wikibase.
 	 * https://www.wikidata.org/wiki/Wikidata:How_to_use_data_on_Wikimedia_projects#Parser_function
-	 * @return string
+	 * @return ?string
 	 */
-	public function formatClaimAsWikitext( array $claim ): string {
+	public function formatClaimAsWikitext( Parser $parser, array $claim ): ?string {
 		// Commons image
 		if ( $claim['mainsnak']['datatype'] === 'commonsMedia' ) {
 			return '[[File:' . $claim['mainsnak']['datavalue']['value'] . '|thumb]]';
@@ -143,10 +143,19 @@ class Wikibase {
 			return $claim['mainsnak']['datavalue']['value'];
 		}
 
-		// External ID.
+		// External ID
 		if ( $claim['mainsnak']['datatype'] === 'external-id' ) {
 			// @todo Handle formatter URL.
 			return $claim['mainsnak']['datavalue']['value'];
+		}
+
+		// Item
+		if ( $claim['mainsnak']['datatype'] === 'wikibase-item' ) {
+			$id = $claim['mainsnak']['datavalue']['value']['id'];
+			$entity = $this->getEntity( $parser, $id );
+			return $entity['labels'][$this->contentLang->getCode()]['value']
+				?? $entity['labels']['en']['value']
+				?? null;
 		}
 	}
 }
