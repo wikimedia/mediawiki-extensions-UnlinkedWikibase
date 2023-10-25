@@ -7,9 +7,9 @@
 namespace MediaWiki\Extension\UnlinkedWikibase;
 
 use Config;
+use Html;
 use MediaWiki\Hook\InfoActionHook;
 use MediaWiki\Hook\ParserFirstCallInitHook;
-use MediaWiki\Html\Html;
 use MediaWiki\MediaWikiServices;
 use Parser;
 use Wikimedia\ParamValidator\TypeDef\BooleanDef;
