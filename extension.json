@@ -46,6 +46,10 @@
 			"description": "The query service Sparql endpoint.",
 			"value": "https://query.wikidata.org/bigdata/namespace/wdq/sparql"
 		},
+		"UnlinkedWikibaseEntityTTL": {
+			"description": "The cache lifetime (in seconds) for individual entities. Set to null when the UnlinkedWikibaseUpdateEntities script is used to update the data.",
+			"value": "60"
+		},
 		"UnlinkedWikibaseQueryTTL": {
 			"description": "The cache lifetime (in seconds) for Sparql queries.",
 			"value": "3600"
