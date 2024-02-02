@@ -13,16 +13,24 @@ use MediaWiki\Hook\ParserFirstCallInitHook;
 use MediaWiki\MediaWikiServices;
 use Parser;
 use Wikimedia\ParamValidator\TypeDef\BooleanDef;
+use Wikimedia\Rdbms\IConnectionProvider;
 
 /**
  * UnlinkedWikibase extension hooks.
  */
 class Hooks implements ParserFirstCallInitHook, InfoActionHook {
 
+	public const PAGE_PROP_ID = 'unlinkedwikibase_id';
+
+	public const PAGE_PROP_ENTITIES_USED_PREFIX = 'unlinkedwikibase_entities_used_';
+
 	private Config $config;
 
-	public function __construct( Config $mainConfig ) {
+	private IConnectionProvider $connectionProvider;
+
+	public function __construct( Config $mainConfig, IConnectionProvider $connectionProvider ) {
 		$this->config = $mainConfig;
+		$this->connectionProvider = $connectionProvider;
 	}
 
 	/**
@@ -138,7 +146,7 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook {
 		if ( !preg_match( '/^Q[0-9]+$/', $params['id'] ) ) {
 			return $this->getError( 'unlinkedwikibase-error-invalid-id', [ $params['id'] ] );
 		}
-		$parser->getOutput()->setPageProperty( 'unlinkedwikibase_id', $params['id'] );
+		$parser->getOutput()->setPageProperty( self::PAGE_PROP_ID, $params['id'] );
 		return '';
 	}
 
@@ -162,15 +170,32 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook {
 	 * {@inheritDoc}
 	 */
 	public function onInfoAction( $context, &$pageInfo ) {
+		// Get this page's Wikibase ID.
 		$props = MediaWikiServices::getInstance()
 			->getPageProps()
-			->getProperties( $context->getTitle(), 'unlinkedwikibase_id' );
+			->getProperties( $context->getTitle(), self::PAGE_PROP_ID );
 		if ( !$props ) {
 			return true;
 		}
+		$entityId = array_shift( $props );
+
+		// Count the number of times it's used.
+		$dbr = $this->connectionProvider->getReplicaDatabase();
+		$countUsed = $dbr->newSelectQueryBuilder()
+			->select( 'COUNT(*)' )
+			->from( 'page_props' )
+			->where( [
+				'pp_propname' . $dbr->buildLike( self::PAGE_PROP_ENTITIES_USED_PREFIX, $dbr->anyString() ),
+				'pp_value' => $entityId,
+			] )
+			->caller( __METHOD__ )
+			->fetchField();
+
+		// Add a row to the info table.
+		$usage = $context->msg( 'unlinkedwikibase-infoaction-other-usage', $countUsed );
 		$pageInfo['header-basic'][] = [
 			wfMessage( 'unlinkedwikibase-infoaction-label' ),
-			array_shift( $props )
+			$entityId . ' ' . $usage
 		];
 		return true;
 	}

@@ -32,7 +32,8 @@
 		"main": {
 			"class": "MediaWiki\\Extension\\UnlinkedWikibase\\Hooks",
 			"services": [
-				"MainConfig"
+				"MainConfig",
+				"ConnectionProvider"
 			]
 		}
 	},

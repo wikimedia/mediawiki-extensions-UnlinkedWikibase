@@ -10,5 +10,6 @@
 	"unlinkedwikibase-error-invalid-id": "Error message displayed when an invalid entity ID is provided.\n\nParameters:\n* $1 — The supplied ID value.",
 	"unlinkedwikibase-error-missing-id": "Error message displayed when the 'id' parameter is not given.",
 	"unlinkedwikibase-error-property-name-not-found": "Error message displayed when a property name or ID couldn't be found.\n\nParameters:\n* $1 — The supplied name or ID.",
-	"unlinkedwikibase-infoaction-label": "Label in the table on ?action=info, shown next to the page's Wikibase ID."
+	"unlinkedwikibase-infoaction-label": "Label in the table on ?action=info, shown next to the page's Wikibase ID.",
+	"unlinkedwikibase-infoaction-other-usage": "Text shown after the page's Wikibase ID to indicate how many pages use this ID."
 }

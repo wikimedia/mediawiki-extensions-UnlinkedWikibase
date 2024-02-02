@@ -12,6 +12,8 @@ use WANObjectCache;
 
 class Wikibase {
 
+	public const PAGE_PROPERTY_PREFIX = 'UnlinkedWikibase-entities-';
+
 	/** @var Config */
 	private $config;
 
@@ -23,6 +25,9 @@ class Wikibase {
 
 	/** @var Language */
 	private $contentLang;
+
+	/** @var string[] */
+	private $entityIds;
 
 	/** @var string[] */
 	private $propIds;
@@ -50,15 +55,28 @@ class Wikibase {
 		return $data;
 	}
 
+	public function getEntityUrl( string $id ): string {
+		$baseUrl = rtrim( $this->config->get( 'UnlinkedWikibaseBaseUrl' ), '/' );
+		return $baseUrl . "/Special:EntityData/$id.json";
+	}
+
 	/**
 	 * Get data about a single Wikibase entity.
 	 */
 	public function getEntity( Parser $parser, string $id ): ?array {
-		$baseUrl = rtrim( $this->config->get( 'UnlinkedWikibaseBaseUrl' ), '/' );
-		$url = $baseUrl . "/Special:EntityData/$id.json";
+		$url = $this->getEntityUrl( $id );
 		$data = $this->fetch( $parser, $url, $this->cache::TTL_MINUTE );
 		$entities = $data['entities'] ?? [];
-		return reset( $entities ) ?: null;
+		$entity = reset( $entities ) ?: null;
+		if ( $entity ) {
+			// Add this ID to the list of in-use entities.
+			$this->entityIds[ $entity['id'] ] = $entity['id'];
+			$parser->getOutput()->setPageProperty(
+				Hooks::PAGE_PROP_ENTITIES_USED_PREFIX . count( $this->entityIds ),
+				$entity['id']
+			);
+		}
+		return $entity;
 	}
 
 	/**
