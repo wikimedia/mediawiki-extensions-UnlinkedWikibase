@@ -100,7 +100,7 @@ class UnlinkedWikibaseLuaLibrary extends Scribunto_LuaLibraryBase {
 		// Fetch the data.
 		$serviceUrl = $this->config->get( 'UnlinkedWikibaseBaseQueryEndpoint' );
 		$url = $serviceUrl . '?format=json&query=' . wfUrlencode( $query );
-		$out = $this->wikibase->fetch( $url, $this->config->get( 'UnlinkedWikibaseQueryTTL' ), $this->getParser() );
+		$out = $this->wikibase->fetch( $url, $this->config->get( 'UnlinkedWikibaseQueryTTL' ) );
 		// Reformat the response for Scribunto.
 		return [ 'result' => $out ];
 	}

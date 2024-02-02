@@ -3,6 +3,8 @@
 namespace MediaWiki\Extension\UnlinkedWikibase;
 
 use DateTime;
+use JobQueueGroup;
+use JobSpecification;
 use Language;
 use MediaWiki\Config\Config;
 use MediaWiki\Http\HttpRequestFactory;
@@ -30,21 +32,25 @@ class Wikibase {
 	/** @var string[] */
 	private $propIds;
 
+	/** @var JobQueueGroup */
+	private JobQueueGroup $jobQueueGroup;
+
 	public function __construct() {
 		$services = MediaWikiServices::getInstance();
 		$this->config = $services->getMainConfig();
 		$this->requestFactory = $services->getHttpRequestFactory();
 		$this->cache = $services->getMainWANObjectCache();
 		$this->contentLang = $services->getContentLanguage();
+		$this->jobQueueGroup = $services->getJobQueueGroupFactory()->makeJobQueueGroup();
 	}
 
 	/**
 	 * @param array $params
 	 * @param ?int $ttl
-	 * @param ?Parser $parser
+	 * @param ?bool $bypassCache
 	 * @return array
 	 */
-	public function getApiResult( array $params, ?int $ttl = null, ?Parser $parser = null ): array {
+	public function getApiResult( array $params, ?int $ttl = null, ?bool $bypassCache = false ): array {
 		$baseUrl = rtrim( $this->config->get( 'UnlinkedWikibaseBaseUrl' ), '/' );
 		if ( str_ends_with( $baseUrl, '/wiki' ) ) {
 			$baseUrl = substr( $baseUrl, 0, -strlen( '/wiki' ) );
@@ -53,8 +59,7 @@ class Wikibase {
 			$ttl = $this->cache::TTL_MINUTE;
 		}
 		$url = $baseUrl . '/w/api.php?' . http_build_query( $params );
-		$data = $this->fetch( $url, $ttl, $parser );
-		return $data;
+		return $bypassCache ? $this->fetchWithoutCache( $url ) : $this->fetch( $url, $ttl );
 	}
 
 	public function getEntityUrl( string $id ): string {
@@ -71,17 +76,15 @@ class Wikibase {
 		if ( $ttl === null ) {
 			$ttl = $this->cache::TTL_INDEFINITE;
 		}
-		$data = $this->fetch( $url, $ttl, $parser );
+		$data = $this->fetch( $url, $ttl );
 		$entities = $data['entities'] ?? [];
 		$entity = reset( $entities ) ?: null;
 		if ( $entity ) {
-			// Add this ID to the list of in-use entities.
-			$this->entityIds[ $entity['id'] ] = $entity['id'];
-			$parser->getOutput()->setPageProperty(
-				Hooks::PAGE_PROP_ENTITIES_USED_PREFIX . count( $this->entityIds ),
-				$entity['id']
-			);
+			$id = $entity['id'];
 		}
+		// Add this ID to the list of in-use entities.
+		$this->entityIds[ $id ] = $id;
+		$parser->getOutput()->setPageProperty( Hooks::PAGE_PROP_ENTITIES_USED_PREFIX . count( $this->entityIds ), $id );
 		return $entity;
 	}
 
@@ -105,7 +108,7 @@ class Wikibase {
 				'limit' => 1,
 				'props' => '',
 				'formatversion' => 2,
-			], $this->cache::TTL_MINUTE, $parser );
+			], $this->cache::TTL_WEEK );
 			$this->propIds[ $nameOrId ] = $propDetails['search'][0]['id'] ?? null;
 		}
 		return $this->propIds[ $nameOrId ];
@@ -114,24 +117,27 @@ class Wikibase {
 	/**
 	 * Fetch data from a JSON URL.
 	 */
-	public function fetch( string $url, int $ttl, ?Parser $parser = null ): array {
-		$requestFactory = $this->requestFactory;
-		return $this->cache->getWithSetCallback(
-			$this->cache->makeKey( 'ext-UnlinkedWikibase', $url ),
-			$ttl,
-			static function () use ( $url, $parser, $requestFactory ) {
-				if ( $parser && $parser->incrementExpensiveFunctionCount() === false ) {
-					// Do not fetch (or cache) if the expesive function limit has been exceeded.
-					return false;
-				}
-				$result = $requestFactory->request( 'GET', $url, [ 'followRedirects' => true ] );
-				// Handle returned JSON.
-				if ( $result === null ) {
-					return [];
-				}
-				return json_decode( $result, true );
-			}
-		);
+	public function fetch( string $url, int $ttl ): array {
+		$data = $this->cache->get( $this->cache->makeKey( 'ext-UnlinkedWikibase', $url ) );
+		if ( $data ) {
+			return $data;
+		}
+		// If it's not cached, create a job that will cache it.
+		$this->jobQueueGroup->lazyPush( new JobSpecification( FetchJob::JOB_NAME, [ 'url' => $url, 'ttl' => $ttl ] ) );
+		return [];
+	}
+
+	public function fetchWithoutCache( string $url ): array {
+		$result = $this->requestFactory->request( 'GET', $url, [ 'followRedirects' => true ] );
+		// Handle returned JSON.
+		if ( $result === null ) {
+			return [];
+		}
+		$data = json_decode( $result, true );
+		if ( $data === null ) {
+			return [];
+		}
+		return $data;
 	}
 
 	/**

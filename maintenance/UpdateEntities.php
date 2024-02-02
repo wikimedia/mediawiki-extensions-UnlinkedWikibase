@@ -58,7 +58,7 @@ class UpdateEntities extends Maintenance {
 				'ids' => implode( '|', $entitieIds ),
 				'format' => 'json',
 				'formatversion' => 2
-			] );
+			], null, true );
 			foreach ( $entities['entities'] as $entity ) {
 				$url = $wikibase->getEntityUrl( $entity['id'] );
 				$cacheKey = $cache->makeKey( 'ext-UnlinkedWikibase', $url );

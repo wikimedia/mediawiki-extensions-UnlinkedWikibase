@@ -33,7 +33,17 @@
 			"class": "MediaWiki\\Extension\\UnlinkedWikibase\\Hooks",
 			"services": [
 				"MainConfig",
-				"ConnectionProvider"
+				"ConnectionProvider",
+				"JobQueueGroupFactory"
+			]
+		}
+	},
+	"JobClasses": {
+		"UnlinkedWikibaseFetch": {
+			"class": "MediaWiki\\Extension\\UnlinkedWikibase\\FetchJob",
+			"services": [
+				"MainWANObjectCache",
+				"MainConfig"
 			]
 		}
 	},
