@@ -157,9 +157,9 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook {
 	 * @return mixed[] The parser function response with the error message HTML.
 	 */
 	private function getError( string $msg, array $params = [] ) {
-		$label = wfMessage( 'unlinkedwikibase-error-label' )->text();
-		$labelHtml = Html::element( 'strong', [], $label );
-		$err = wfMessage( $msg, $params )->text();
+		$label = wfMessage( 'unlinkedwikibase-error-label' )->escaped();
+		$labelHtml = Html::rawElement( 'strong', [], $label );
+		$err = wfMessage( $msg, $params )->escaped();
 		$out = Html::rawElement( 'span', [ 'class' => 'error' ], "$labelHtml $err" );
 		return [ 0 => $out, 'isHTML' => true ];
 	}
