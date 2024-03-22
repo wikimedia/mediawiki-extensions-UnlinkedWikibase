@@ -12,8 +12,6 @@ use WANObjectCache;
 
 class Wikibase {
 
-	public const PAGE_PROPERTY_PREFIX = 'UnlinkedWikibase-entities-';
-
 	/** @var Config */
 	private $config;
 
@@ -27,7 +25,7 @@ class Wikibase {
 	private $contentLang;
 
 	/** @var string[] */
-	private $entityIds;
+	private $entityIds = [];
 
 	/** @var string[] */
 	private $propIds;
@@ -41,17 +39,21 @@ class Wikibase {
 	}
 
 	/**
-	 * @param Parser $parser
 	 * @param array $params
+	 * @param ?int $ttl
+	 * @param ?Parser $parser
 	 * @return array
 	 */
-	public function getApiResult( Parser $parser, array $params ): array {
+	public function getApiResult( array $params, ?int $ttl = null, ?Parser $parser = null ): array {
 		$baseUrl = rtrim( $this->config->get( 'UnlinkedWikibaseBaseUrl' ), '/' );
 		if ( str_ends_with( $baseUrl, '/wiki' ) ) {
 			$baseUrl = substr( $baseUrl, 0, -strlen( '/wiki' ) );
 		}
+		if ( $ttl === null ) {
+			$ttl = $this->cache::TTL_MINUTE;
+		}
 		$url = $baseUrl . '/w/api.php?' . http_build_query( $params );
-		$data = $this->fetch( $parser, $url, $this->cache::TTL_MINUTE );
+		$data = $this->fetch( $url, $ttl, $parser );
 		return $data;
 	}
 
@@ -65,7 +67,11 @@ class Wikibase {
 	 */
 	public function getEntity( Parser $parser, string $id ): ?array {
 		$url = $this->getEntityUrl( $id );
-		$data = $this->fetch( $parser, $url, $this->cache::TTL_MINUTE );
+		$ttl = $this->config->get( 'UnlinkedWikibaseEntityTTL' );
+		if ( $ttl === null ) {
+			$ttl = $this->cache::TTL_INDEFINITE;
+		}
+		$data = $this->fetch( $url, $ttl, $parser );
 		$entities = $data['entities'] ?? [];
 		$entity = reset( $entities ) ?: null;
 		if ( $entity ) {
@@ -90,7 +96,7 @@ class Wikibase {
 		if ( preg_match( '/P[0-9]+/', trim( $nameOrId ) ) ) {
 			$this->propIds[ $nameOrId ] = trim( $nameOrId );
 		} else {
-			$propDetails = $this->getApiResult( $parser, [
+			$propDetails = $this->getApiResult( [
 				'action' => 'wbsearchentities',
 				'format' => 'json',
 				'search' => $nameOrId,
@@ -99,7 +105,7 @@ class Wikibase {
 				'limit' => 1,
 				'props' => '',
 				'formatversion' => 2,
-			] );
+			], $this->cache::TTL_MINUTE, $parser );
 			$this->propIds[ $nameOrId ] = $propDetails['search'][0]['id'] ?? null;
 		}
 		return $this->propIds[ $nameOrId ];
@@ -108,13 +114,16 @@ class Wikibase {
 	/**
 	 * Fetch data from a JSON URL.
 	 */
-	public function fetch( Parser $parser, string $url, int $ttl ): array {
+	public function fetch( string $url, int $ttl, ?Parser $parser = null ): array {
 		$requestFactory = $this->requestFactory;
 		return $this->cache->getWithSetCallback(
 			$this->cache->makeKey( 'ext-UnlinkedWikibase', $url ),
 			$ttl,
 			static function () use ( $url, $parser, $requestFactory ) {
-				$parser->incrementExpensiveFunctionCount();
+				if ( $parser && $parser->incrementExpensiveFunctionCount() === false ) {
+					// Do not fetch (or cache) if the expesive function limit has been exceeded.
+					return false;
+				}
 				$result = $requestFactory->request( 'GET', $url, [ 'followRedirects' => true ] );
 				// Handle returned JSON.
 				if ( $result === null ) {
