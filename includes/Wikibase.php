@@ -184,5 +184,24 @@ class Wikibase {
 				?? $entity['labels']['en']['value']
 				?? null;
 		}
+
+		// Quantity
+		if ( $claim['mainsnak']['datatype'] === 'quantity' ) {
+			$unitId = substr(
+				$claim['mainsnak']['datavalue']['value']['unit'],
+				strlen( 'http://www.wikidata.org/entity/' )
+			);
+			$unit = $this->getEntity( $parser, $unitId );
+			$unitLabel = '';
+			if ( $unit ) {
+				$unitLabel = $unit['labels'][$this->contentLang->getCode()]['value']
+					?? $unit['labels']['en']['value']
+					?? '';
+			}
+			$amount = (float)$claim['mainsnak']['datavalue']['value']['amount'];
+			return trim( $amount . ' ' . $unitLabel );
+		}
+
+		return null;
 	}
 }
