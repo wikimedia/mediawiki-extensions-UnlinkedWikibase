@@ -26,7 +26,9 @@
 	"Hooks": {
 		"ScribuntoExternalLibraries": "MediaWiki\\Extension\\UnlinkedWikibase\\Hooks::onScribuntoExternalLibraries",
 		"ParserFirstCallInit": "main",
-		"InfoAction": "main"
+		"InfoAction": "main",
+		"OutputPageParserOutput": "main",
+		"SidebarBeforeOutput": "main"
 	},
 	"HookHandlers": {
 		"main": {
@@ -67,6 +69,14 @@
 		"UnlinkedWikibaseStatementsParserFunc": {
 			"description": "Whether to enable the {{#statements:}} parser function.",
 			"value": false
+		},
+		"UnlinkedWikibaseSitelinkSuffix": {
+			"description": "What sitelink suffix to turn into language links (e.g. 'wiki') or false to disable using language links",
+			"value": false
+		},
+		"UnlinkedWikibaseSitelinkSkippedLangs": {
+			"description": "List of language codes to skip",
+			"value": []
 		}
 	},
 	"manifest_version": 2

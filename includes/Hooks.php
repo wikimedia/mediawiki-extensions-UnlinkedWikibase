@@ -8,8 +8,13 @@ namespace MediaWiki\Extension\UnlinkedWikibase;
 
 use Config;
 use Html;
+use Language;
+use LanguageCode;
 use MediaWiki\Hook\InfoActionHook;
+use MediaWiki\Hook\OutputPageParserOutputHook;
 use MediaWiki\Hook\ParserFirstCallInitHook;
+use MediaWiki\Hook\SidebarBeforeOutputHook;
+use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use Parser;
 use Wikimedia\ParamValidator\TypeDef\BooleanDef;
@@ -18,11 +23,13 @@ use Wikimedia\Rdbms\LBFactory;
 /**
  * UnlinkedWikibase extension hooks.
  */
-class Hooks implements ParserFirstCallInitHook, InfoActionHook {
+class Hooks implements ParserFirstCallInitHook, InfoActionHook, SidebarBeforeOutputHook, OutputPageParserOutputHook {
 
 	public const PAGE_PROP_ID = 'unlinkedwikibase_id';
 
 	public const PAGE_PROP_ENTITIES_USED_PREFIX = 'unlinkedwikibase_entities_used_';
+
+	private const LANG_LINKS = 'unlinkedwikibase_lang_links';
 
 	private Config $config;
 
@@ -147,7 +154,96 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook {
 			return $this->getError( 'unlinkedwikibase-error-invalid-id', [ $params['id'] ] );
 		}
 		$parser->getOutput()->setPageProperty( self::PAGE_PROP_ID, $params['id'] );
+
+		if (
+			$this->config->get( 'UnlinkedWikibaseSitelinkSuffix' ) &&
+			!$this->config->get( MainConfigNames::HideInterlanguageLinks ) &&
+			$parser->getOutput()->getExtensionData( self::LANG_LINKS ) === null
+		) {
+			$wb = new Wikibase;
+			$entity = $wb->getEntity( $parser, $params['id'] );
+			$langLinks = $this->generateLangLinks( $entity, $parser->getTargetLanguage() );
+			$parser->getOutput()->setExtensionData( self::LANG_LINKS, $langLinks );
+		}
 		return '';
+	}
+
+	/**
+	 * Convert entity sitelinks into the form MW skin system expects
+	 *
+	 * @param ?array $entity Entity data
+	 * @param Language $lang Language object for translating names
+	 * @return array List of additional language links to add. See Skin::getLanguage()
+	 */
+	private function generateLangLinks( $entity, Language $lang ) {
+		if ( !$entity || !isset( $entity['sitelinks'] ) ) {
+			return [];
+		}
+		$languageLinks = [];
+		$suffix = $this->config->get( 'UnlinkedWikibaseSitelinkSuffix' );
+		$skip = $this->config->get( 'UnlinkedWikibaseSitelinkSkippedLangs' );
+		$map = $this->config->get( MainConfigNames::InterlanguageLinkCodeMap );
+		$langNameUtils = MediaWikiServices::getInstance()->getLanguageNameUtils();
+		foreach ( $entity['sitelinks'] as $wiki => $sitelink ) {
+			if (
+				strlen( $wiki ) <= strlen( $suffix ) ||
+				substr( $wiki, -strlen( $suffix ) ) !== $suffix ) {
+				// wrong wiki family
+				continue;
+			}
+			$originalLangCode = substr( $wiki, 0, strlen( $wiki ) - strlen( $suffix ) );
+			if ( in_array( $originalLangCode, $skip ) ) {
+				continue;
+			}
+
+			// Based on Skin::getLanguages
+			$class = "interlanguage-link interwiki-$originalLangCode";
+
+			$langCode = $map[$originalLangCode] ?? $originalLangCode;
+			$langName = $langNameUtils->getLanguageName( $langCode );
+			if ( strval( $langName ) === '' ) {
+				$msg = wfMessage( "interlanguage-link-$langCode" );
+				if ( $msg->isDisabled() ) {
+					// This seems odd, but copy what core does.
+					$langName = $sitelink['title'];
+				} else {
+					$msg->text();
+				}
+			} else {
+				$langName = $lang->ucFirst( $langName );
+			}
+
+			// Core would use user language, but we use parse language due to
+			// where this processing happens with regards to caching.
+			// This is only used in the tooltip anyways.
+			$langLocalName = $langNameUtils->getLanguageName( $langCode, $lang->getCode() );
+			if ( $langLocalName === '' ) {
+				$friendlyName = wfMessage( "interlanguage-link-sitename-$langCode" );
+				if ( $friendlyName->isDisabled() ) {
+					$title = $originalLangCode . ":" . $sitelink['title'];
+				} else {
+					$title = wfMessage(
+						'interlanguage-link-title-nonlang',
+						$sitelink['title'],
+						$friendlyName->text()
+					)->text();
+				}
+			} else {
+				$title = wfMessage( 'interlanguage-link-title', $sitelink['title'], $langLocalName )->text();
+			}
+
+			$langCodeBCP = LanguageCode::bcp47( $langCode );
+			$languageLinks[] = [
+				'href' => $sitelink['url'],
+				'text' => $langName,
+				'title' => $title,
+				'class' => $class,
+				'link-class' => 'interlanguage-link-target',
+				'lang' => $langCodeBCP,
+				'hreflang' => $langCodeBCP
+			];
+		}
+		return $languageLinks;
 	}
 
 	/**
@@ -198,5 +294,31 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook {
 			$entityId . ' ' . $usage
 		];
 		return true;
+	}
+
+	/**
+	 * Propagate unlinked id to from parser output to output page for lang links
+	 *
+	 * @inheritDoc
+	 */
+	public function onOutputPageParserOutput( $outputPage, $parserOutput ): void {
+		$langLinks = $parserOutput->getExtensionData( self::LANG_LINKS );
+		if ( is_array( $langLinks ) ) {
+			$outputPage->setProperty( self::LANG_LINKS, $langLinks );
+		}
+	}
+
+	/**
+	 * Adjust language links based on entity for page
+	 *
+	 * Only triggered when $wgUnlinkedWikibaseSitelinkSuffix is set
+	 *
+	 * @inheritDoc
+	 */
+	public function onSidebarBeforeOutput( $skin, &$sidebar ): void {
+		$langLinks = $skin->getOutput()->getProperty( self::LANG_LINKS );
+		if ( is_array( $langLinks ) ) {
+			$sidebar['LANGUAGES'] = array_merge( $sidebar['LANGUAGES'], $langLinks );
+		}
 	}
 }
