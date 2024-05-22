@@ -13,7 +13,7 @@ use MediaWiki\Hook\ParserFirstCallInitHook;
 use MediaWiki\MediaWikiServices;
 use Parser;
 use Wikimedia\ParamValidator\TypeDef\BooleanDef;
-use Wikimedia\Rdbms\IConnectionProvider;
+use Wikimedia\Rdbms\LBFactory;
 
 /**
  * UnlinkedWikibase extension hooks.
@@ -26,9 +26,9 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook {
 
 	private Config $config;
 
-	private IConnectionProvider $connectionProvider;
+	private LBFactory $connectionProvider;
 
-	public function __construct( Config $mainConfig, IConnectionProvider $connectionProvider ) {
+	public function __construct( Config $mainConfig, LBFactory $connectionProvider ) {
 		$this->config = $mainConfig;
 		$this->connectionProvider = $connectionProvider;
 	}

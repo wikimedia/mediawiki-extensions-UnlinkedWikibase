@@ -33,7 +33,7 @@
 			"class": "MediaWiki\\Extension\\UnlinkedWikibase\\Hooks",
 			"services": [
 				"MainConfig",
-				"ConnectionProvider",
+				"DBLoadBalancerFactory",
 				"JobQueueGroupFactory"
 			]
 		}
