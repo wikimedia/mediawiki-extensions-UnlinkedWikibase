@@ -5,6 +5,7 @@ namespace MediaWiki\Extension\UnlinkedWikibase\Maintenance;
 use Maintenance;
 use MediaWiki\Extension\UnlinkedWikibase\Hooks;
 use MediaWiki\Extension\UnlinkedWikibase\Wikibase;
+use MediaWiki\MediaWikiServices;
 
 $IP = getenv( 'MW_INSTALL_PATH' );
 if ( $IP === false ) {
@@ -32,7 +33,7 @@ class UpdateEntities extends Maintenance {
 		$dbr = $this->getDB( DB_REPLICA );
 		$previousQid = 'Q0';
 		$wikibase = new Wikibase();
-		$cache = $this->getServiceContainer()->getMainWANObjectCache();
+		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
 		do {
 			$rows = $dbr->newSelectQueryBuilder()
 				->select( [ 'pp_value' ] )
