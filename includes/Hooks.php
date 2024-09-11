@@ -17,7 +17,6 @@ use MediaWiki\Hook\SidebarBeforeOutputHook;
 use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use Parser;
-use Wikimedia\ParamValidator\TypeDef\BooleanDef;
 use Wikimedia\Rdbms\LBFactory;
 
 /**
@@ -30,6 +29,9 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook, SidebarBeforeOut
 	public const PAGE_PROP_ENTITIES_USED_PREFIX = 'unlinkedwikibase_entities_used_';
 
 	private const LANG_LINKS = 'unlinkedwikibase_lang_links';
+
+	private const TRUEVALS = [ 'true', 't', 'yes', 'y', 'on', '1' ];
+	private const FALSEVALS = [ 'false', 'f', 'no', 'n', 'off', '0' ];
 
 	private Config $config;
 
@@ -122,10 +124,10 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook, SidebarBeforeOut
 			if ( count( $pair ) == 2 ) {
 				$name = trim( $pair[0] );
 				$value = trim( $pair[1] );
-				if ( in_array( $value, BooleanDef::$TRUEVALS, true ) ) {
+				if ( in_array( $value, self::TRUEVALS, true ) ) {
 					$value = true;
 				}
-				if ( in_array( $value, BooleanDef::$FALSEVALS, true ) ) {
+				if ( in_array( $value, self::FALSEVALS, true ) ) {
 					$value = false;
 				}
 				if ( $value !== '' ) {
