@@ -128,7 +128,7 @@ class Wikibase {
 	}
 
 	public function fetchWithoutCache( string $url ): array {
-		$result = $this->requestFactory->request( 'GET', $url, [ 'followRedirects' => true ] );
+		$result = $this->requestFactory->request( 'GET', $url, [ 'followRedirects' => true ], __METHOD__ );
 		// Handle returned JSON.
 		if ( $result === null ) {
 			return [];
