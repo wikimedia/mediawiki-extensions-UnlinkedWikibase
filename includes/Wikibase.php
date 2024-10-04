@@ -118,9 +118,16 @@ class Wikibase {
 	 * Fetch data from a JSON URL.
 	 */
 	public function fetch( string $url, int $ttl ): array {
-		$data = $this->cache->get( $this->cache->makeKey( 'ext-UnlinkedWikibase', $url ) );
+		$cacheKey = $this->cache->makeKey( 'ext-UnlinkedWikibase', $url );
+		$data = $this->cache->get( $cacheKey );
 		if ( $data ) {
 			return $data;
+		}
+		// If the cache doesn't support having the fetch happen in the job queue, fetch the data immediately.
+		if ( $this->cache->getQoS( $this->cache::ATTR_DURABILITY ) < $this->cache::QOS_DURABILITY_SERVICE ) {
+			$newData = $this->fetchWithoutCache( $url );
+			$this->cache->set( $cacheKey, $newData, $ttl );
+			return $newData;
 		}
 		// If it's not cached, create a job that will cache it.
 		$this->jobQueueGroup->lazyPush( new JobSpecification( FetchJob::JOB_NAME, [ 'url' => $url, 'ttl' => $ttl ] ) );

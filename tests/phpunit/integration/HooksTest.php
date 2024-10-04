@@ -31,6 +31,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			$this->getRequest( 'Q123' ),
 			$this->getRequest( 'Q456' ),
 		] );
+		$this->overrideConfigValue( 'UnlinkedWikibaseSitelinkSuffix', null );
 
 		$this->editPage( 'Module:Test', '
 		local p = {}
@@ -40,9 +41,12 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		return p
 		' );
 
-		$this->editPage( 'Entity page', '{{#unlinkedwikibase:|id=Q123}}' );
-		$this->editPage( 'Query page 1', '{{#invoke:test|main|Q123}}{{#invoke:test|main|Q456}}' );
-		$this->editPage( 'Query page 2', '{{#invoke:test|main|Q123}}' );
+		$entityPage = $this->editPage( 'Entity page', '{{#unlinkedwikibase:|id=Q123}}' );
+		$this->assertSame( 2, $entityPage->getValue()['revision-record']->getId() );
+		$page1 = $this->editPage( 'Query page 1', '{{#invoke:test|main|Q123}}{{#invoke:test|main|Q456}}' );
+		$this->assertSame( 3, $page1->getValue()['revision-record']->getId() );
+		$page2 = $this->editPage( 'Query page 2', '{{#invoke:test|main|Q123}}' );
+		$this->assertSame( 4, $page2->getValue()['revision-record']->getId() );
 		$this->assertSelect(
 			'page_props',
 			[ 'pp_page', 'pp_propname', 'pp_value' ],
