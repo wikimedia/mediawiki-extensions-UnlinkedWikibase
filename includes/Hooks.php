@@ -311,9 +311,9 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook, SidebarBeforeOut
 	}
 
 	/**
-	 * Adjust language links based on entity for page
+	 * Adjust language links based on entity for page, and add a toolbox link to the entity.
 	 *
-	 * Only triggered when $wgUnlinkedWikibaseSitelinkSuffix is set
+	 * The language links are only triggered when $wgUnlinkedWikibaseSitelinkSuffix is set.
 	 *
 	 * @inheritDoc
 	 */
@@ -321,6 +321,19 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook, SidebarBeforeOut
 		$langLinks = $skin->getOutput()->getProperty( self::LANG_LINKS );
 		if ( is_array( $langLinks ) ) {
 			$sidebar['LANGUAGES'] = array_merge( $sidebar['LANGUAGES'], $langLinks );
+		}
+
+		$props = MediaWikiServices::getInstance()
+			->getPageProps()
+			->getProperties( $skin->getTitle(), self::PAGE_PROP_ID );
+		if ( $props ) {
+			$entityId = array_shift( $props );
+			$baseUrl = rtrim( $this->config->get( 'UnlinkedWikibaseBaseUrl' ), '/' );
+			$sidebar['TOOLBOX']['unlinkedwikibase'] = [
+				'msg' => 'unlinkedwikibase-sidebar-link',
+				'href' => "$baseUrl/$entityId",
+				'id' => 't-unlinkedwikibase-entity',
+			];
 		}
 	}
 }
