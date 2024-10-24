@@ -2,9 +2,9 @@
 
 namespace MediaWiki\Extension\UnlinkedWikibase\Test;
 
+use MediaWiki\Extension\Scribunto\Engines\LuaCommon\LuaEngine;
 use MediaWiki\Extension\UnlinkedWikibase\UnlinkedWikibaseLuaLibrary;
 use MediaWikiIntegrationTestCase;
-use Scribunto_LuaEngine;
 
 /**
  * @covers MediaWiki\Extension\UnlinkedWikibase\UnlinkedWikibaseLuaLibrary
@@ -15,7 +15,7 @@ class UnlinkedWikibaseLuaLibraryTest extends MediaWikiIntegrationTestCase {
 	 * @dataProvider provideZeroIndexed
 	 */
 	public function testZeroIndexed( array $in, array $out ) {
-		$engine = $this->createMock( Scribunto_LuaEngine::class );
+		$engine = $this->createMock( LuaEngine::class );
 		$lib = new UnlinkedWikibaseLuaLibrary( $engine );
 		$this->assertSame( $out, $lib->arrayConvertToOneIndex( $in ) );
 	}

@@ -3,12 +3,12 @@
 namespace MediaWiki\Extension\UnlinkedWikibase;
 
 use Config;
+use MediaWiki\Extension\Scribunto\Engines\LuaCommon\LibraryBase;
+use MediaWiki\Extension\Scribunto\Engines\LuaCommon\LuaEngine;
 use MediaWiki\MediaWikiServices;
-use Scribunto_LuaEngine;
-use Scribunto_LuaLibraryBase;
 use WANObjectCache;
 
-class UnlinkedWikibaseLuaLibrary extends Scribunto_LuaLibraryBase {
+class UnlinkedWikibaseLuaLibrary extends LibraryBase {
 
 	/** @var Config */
 	private $config;
@@ -20,9 +20,9 @@ class UnlinkedWikibaseLuaLibrary extends Scribunto_LuaLibraryBase {
 	private $wikibase;
 
 	/**
-	 * @param Scribunto_LuaEngine $engine
+	 * @param LuaEngine $engine
 	 */
-	public function __construct( Scribunto_LuaEngine $engine ) {
+	public function __construct( LuaEngine $engine ) {
 		parent::__construct( $engine );
 		$services = MediaWikiServices::getInstance();
 		$this->config = $services->getMainConfig();
