@@ -7,7 +7,7 @@
 	"namemsg": "unlinkedwikibase",
 	"descriptionmsg": "unlinkedwikibase-desc",
 	"version": "3.0.0",
-	"url": "https://www.mediawiki.org/wiki/Extension:UnlinkedWikibase",
+	"url": "https://www.mediawiki.org/wiki/Special:MyLanguage/Extension:UnlinkedWikibase",
 	"type": "other",
 	"requires": {
 		"MediaWiki": ">= 1.40"
