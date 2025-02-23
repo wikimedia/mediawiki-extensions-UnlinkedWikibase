@@ -47,4 +47,24 @@ function UnlinkedWikibase.query( query )
 	return php.query( query );
 end
 
+-- --
+-- Get the entity id for wikibase.
+-- @param string title Local title.
+-- @return string The Wikibase entity ID.
+-- --
+function UnlinkedWikibase.getEntityId( title )
+	if not title then
+		return nil
+	end
+	return php.getEntityId( title )
+end
+
+-- --
+-- Get a wikibase entity ID for Current Page.
+-- @return string The Wikibase entity ID.
+-- --
+function UnlinkedWikibase.getEntityIdForCurrentPage()
+	return UnlinkedWikibase.getEntityId( mw.title.getCurrentTitle().prefixedText )
+end
+
 return UnlinkedWikibase

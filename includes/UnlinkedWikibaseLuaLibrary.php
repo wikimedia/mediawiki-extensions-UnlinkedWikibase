@@ -6,6 +6,7 @@ use Config;
 use MediaWiki\Extension\Scribunto\Engines\LuaCommon\LibraryBase;
 use MediaWiki\Extension\Scribunto\Engines\LuaCommon\LuaEngine;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Title\Title;
 use WANObjectCache;
 
 class UnlinkedWikibaseLuaLibrary extends LibraryBase {
@@ -43,6 +44,7 @@ class UnlinkedWikibaseLuaLibrary extends LibraryBase {
 		$interfaceFuncs = [
 			'getEntity' => [ $this, 'getEntity' ],
 			'getLocalPageId' => [ $this, 'getLocalPageId' ],
+			'getEntityId' => [ $this, 'getEntityId' ],
 			'query' => [ $this, 'query' ],
 		];
 		$luaFile = dirname( __DIR__ ) . '/scribunto/UnlinkedWikibase.lua';
@@ -129,6 +131,46 @@ class UnlinkedWikibaseLuaLibrary extends LibraryBase {
 				$parser->incrementExpensiveFunctionCount();
 				$pageId = $dbr->selectField( 'page_props', 'pp_page', $where, $method, $options );
 				return [ 'result' => (int)$pageId ];
+			}
+		);
+	}
+
+	/**
+	 * Get a Wikibase entity ID from a title page.
+	 *
+	 * @param string $title Title of the page.
+	 * @return array
+	 */
+	public function getEntityId( string $title ) {
+		$parser = $this->getParser();
+		$method = __METHOD__;
+		return $this->cache->getWithSetCallback(
+			$this->cache->makeKey( 'ext-UnlinkedWikibase', $method, $title ),
+			WANObjectCache::TTL_MINUTE * 5,
+			static function () use ( $title, $parser, $method ) {
+				$parser->incrementExpensiveFunctionCount();
+
+				$titleObject = Title::newFromText( $title );
+				if ( !$titleObject ) {
+					return [ 'result' => null ];
+				}
+
+				$dbr = MediaWikiServices::getInstance()
+					->getDBLoadBalancer()
+					->getConnection( DB_REPLICA );
+				$entityId = $dbr->newSelectQueryBuilder()
+					->select( 'pp_value' )
+					->from( 'page_props' )
+					->join( 'page', 'p', 'pp_page = p.page_id' )
+					->where( [
+						'pp_propname' => 'unlinkedwikibase_id',
+						'p.page_title' => $titleObject->getDBkey(),
+						'p.page_namespace' => $titleObject->getNamespace()
+					] )
+					->limit( 1 )
+					->caller( $method )
+					->fetchField();
+				return [ 'result' => $entityId ];
 			}
 		);
 	}
