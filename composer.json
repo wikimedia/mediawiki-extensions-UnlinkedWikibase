@@ -3,7 +3,7 @@
 	"description": "MediaWiki extension providing access to Wikibase entities from wikis that are not linked to a Wikibase site.",
 	"license": "gpl-2.0-or-later",
 	"type": "mediawiki-extension",
-	"homepage": "https://www.mediawiki.org/wiki/Extension:UnlinkedWikibase",
+	"homepage": "https://www.mediawiki.org/wiki/Special:MyLanguage/Extension:UnlinkedWikibase",
 	"keywords": [
 		"MediaWiki",
 		"Wikibase"

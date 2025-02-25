@@ -5,7 +5,7 @@
 		]
 	},
 	"unlinkedwikibase": "The name of the extension.",
-	"unlinkedwikibase-desc": "{{desc|name=UnlinkedWikibase|url=https://www.mediawiki.org/wiki/Extension:UnlinkedWikibase}}",
+	"unlinkedwikibase-desc": "{{desc|name=UnlinkedWikibase|url=https://www.mediawiki.org/wiki/Special:MyLanguage/Extension:UnlinkedWikibase}}",
 	"unlinkedwikibase-error-label": "Label shown before any error message.",
 	"unlinkedwikibase-error-invalid-id": "Error message displayed when an invalid entity ID is provided.\n\nParameters:\n* $1 — The supplied ID value.",
 	"unlinkedwikibase-error-missing-id": "Error message displayed when the 'id' parameter is not given.",
