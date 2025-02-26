@@ -1,0 +1,13 @@
+{
+	"@metadata": {
+		"authors": []
+	},
+	"unlinkedwikibase-desc": "Zugriff auf Wikibase-Objekt-Daten aus Wikis, die nicht mit einer Wikibase-Site verknüpft sind.",
+	"unlinkedwikibase-error-label": "UnlinkedWikibase-Fehler:",
+	"unlinkedwikibase-error-missing-id": "Der Parameter „id“ muss angegeben werden.",
+	"unlinkedwikibase-error-invalid-id": "Die ID „$1“ weist nicht das erforderliche Format einer Ganzzahl mit dem Präfix „Q“ auf.",
+	"unlinkedwikibase-error-property-name-not-found": "Die Eigenschaft „$1“ konnte nicht gefunden werden.",
+	"unlinkedwikibase-sidebar-link": "Wikibase-Objekt",
+	"unlinkedwikibase-infoaction-label": "Wikibase-Objekt-ID",
+	"unlinkedwikibase-infoaction-other-usage": "(verwendet auf {{PLURAL:$1|einer Seite|$1 Seiten}})"
+}
