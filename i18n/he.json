@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"מיכי י-ם"
+		]
+	},
+	"unlinkedwikibase-desc": "גש לנתוני ישות של ויקיבייס מאתרי ויקי שאינם מקושרים לאתר ויקיבייס.",
+	"unlinkedwikibase-error-missing-id": "הפרמטר 'id' נדרש.",
+	"unlinkedwikibase-sidebar-link": "ישות ויקיבייס",
+	"unlinkedwikibase-infoaction-label": "מזהה ישות ויקיבייס",
+	"unlinkedwikibase-infoaction-other-usage": "בשימוש {{PLURAL:$1|בדף אחד|ב־$1 דפים}}"
+}
