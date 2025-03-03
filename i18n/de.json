@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": []
+	},
+	"unlinkedwikibase-error-label": "UnlinkedWikibase-Fehler:",
+	"unlinkedwikibase-error-missing-id": "Der Parameter „id“ muss angegeben werden.",
+	"unlinkedwikibase-error-invalid-id": "Die ID „$1“ weist nicht das erforderliche Format einer Ganzzahl mit dem Präfix „Q“ auf.",
+	"unlinkedwikibase-infoaction-label": "Wikibase-Objekt-ID"
+}
