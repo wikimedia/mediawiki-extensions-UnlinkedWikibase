@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Milicevic01"
+		]
+	},
+	"unlinkedwikibase-error-property-name-not-found": "Својство „$1” није пронађено.",
+	"unlinkedwikibase-infoaction-other-usage": "(користи се на $1 {{PLURAL:$1|страници|страница}})"
+}

@@ -1,0 +1,15 @@
+{
+	"@metadata": {
+		"authors": [
+			"Amire80",
+			"מיכי י-ם"
+		]
+	},
+	"unlinkedwikibase-error-label": "שגיאת UnlinkedWikibase:",
+	"unlinkedwikibase-error-missing-id": "הפרמטר \"id\" נדרש.",
+	"unlinkedwikibase-error-invalid-id": "המזהה \"$1\" לא כתוב בתסדיר הנדרש של מספר שלם עם התחילית 'Q'.",
+	"unlinkedwikibase-error-property-name-not-found": "לא היה אפשר למצוא את המאפיין המילונית \"$1\".",
+	"unlinkedwikibase-sidebar-link": "ישות ויקיבייס",
+	"unlinkedwikibase-infoaction-label": "מזהה ישות ויקיבייס",
+	"unlinkedwikibase-infoaction-other-usage": "(בשימוש {{PLURAL:$1|בדף אחד|ב־$1 דפים}})"
+}
