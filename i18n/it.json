@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Beta16"
+		]
+	},
+	"unlinkedwikibase-error-property-name-not-found": "La proprietà '$1' non è stata trovata.",
+	"unlinkedwikibase-infoaction-label": "ID entità Wikibase"
+}
