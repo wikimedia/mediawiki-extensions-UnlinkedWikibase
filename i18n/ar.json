@@ -1,0 +1,14 @@
+{
+	"@metadata": {
+		"authors": [
+			"Meno25"
+		]
+	},
+	"unlinkedwikibase": "قاعدة بيانات ويكي غير مرتبطة",
+	"unlinkedwikibase-error-label": "خطأ في قاعدة بيانات ويكي غير المرتبطة:",
+	"unlinkedwikibase-error-missing-id": "يجب توفير المعلمة 'id'.",
+	"unlinkedwikibase-error-invalid-id": "المعرف ' $1 ' ليس بالتنسيق المطلوب للعدد الصحيح الذي يسبقه 'Q'.",
+	"unlinkedwikibase-error-property-name-not-found": "لم يتم العثور على الخاصية ' $1 '.",
+	"unlinkedwikibase-infoaction-label": "معرف كيان ويكيبيس",
+	"unlinkedwikibase-infoaction-other-usage": "تمت إزالة $1 {{PLURAL:$1|صفحة}}"
+}
