@@ -1,0 +1,15 @@
+{
+	"@metadata": {
+		"authors": [
+			"Bjankuloski06"
+		]
+	},
+	"unlinkedwikibase-desc": "Пристап до податоци од единици на Викибазата од викија кои не се поврзани со мреж. место на Викибазата.",
+	"unlinkedwikibase-error-label": "Грешка во UnlinkedWikibase:",
+	"unlinkedwikibase-error-missing-id": "Мора да се укаже параметарот „id“.",
+	"unlinkedwikibase-error-invalid-id": "Назнаката „$1“ не е во бараниот формат, кој треба да биде цел број, со претставка „Q“.",
+	"unlinkedwikibase-error-property-name-not-found": "Не најдов својство „$1“.",
+	"unlinkedwikibase-sidebar-link": "Единица на Викибазата",
+	"unlinkedwikibase-infoaction-label": "Назнака на единицата на Викибазата",
+	"unlinkedwikibase-infoaction-other-usage": "(се користи на $1 {{PLURAL:$1|страница|страници}})"
+}
