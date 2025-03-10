@@ -4,7 +4,7 @@ namespace MediaWiki\Extension\UnlinkedWikibase;
 
 use Config;
 use Job;
-use Title;
+use MediaWiki\Title\Title;
 use WANObjectCache;
 
 class FetchJob extends Job {

@@ -7,13 +7,13 @@
 namespace MediaWiki\Extension\UnlinkedWikibase;
 
 use Config;
-use Html;
 use Language;
 use LanguageCode;
 use MediaWiki\Hook\InfoActionHook;
 use MediaWiki\Hook\OutputPageParserOutputHook;
 use MediaWiki\Hook\ParserFirstCallInitHook;
 use MediaWiki\Hook\SidebarBeforeOutputHook;
+use MediaWiki\Html\Html;
 use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use Parser;
