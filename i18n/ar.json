@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Meno25"
+		]
+	},
+	"unlinkedwikibase": "قاعدة بيانات ويكي غير مرتبطة",
+	"unlinkedwikibase-error-label": "خطأ في قاعدة بيانات ويكي غير المرتبطة:",
+	"unlinkedwikibase-error-missing-id": "يجب توفير المعلمة 'id'.",
+	"unlinkedwikibase-error-invalid-id": "المعرف ' $1 ' ليس بالتنسيق المطلوب للعدد الصحيح الذي يسبقه 'Q'.",
+	"unlinkedwikibase-infoaction-label": "معرف كيان ويكيبيس"
+}
