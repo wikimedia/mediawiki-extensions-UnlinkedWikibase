@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Bjankuloski06"
+		]
+	},
+	"unlinkedwikibase-error-label": "Грешка во UnlinkedWikibase:",
+	"unlinkedwikibase-error-missing-id": "Мора да се укаже параметарот „id“.",
+	"unlinkedwikibase-error-invalid-id": "Назнаката „$1“ не е во бараниот формат, кој треба да биде цел број, со претставка „Q“.",
+	"unlinkedwikibase-error-property-name-not-found": "Не најдов својство „$1“.",
+	"unlinkedwikibase-infoaction-label": "Назнака на единицата на Викибазата"
+}
