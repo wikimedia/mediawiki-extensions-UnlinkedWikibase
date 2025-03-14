@@ -1,0 +1,15 @@
+{
+	"@metadata": {
+		"authors": [
+			"JLTRY"
+		]
+	},
+	"unlinkedwikibase-desc": "Accéder aux données de l'entité Wikibase à partir de wikis qui ne sont pas liés à un site Wikibase.",
+	"unlinkedwikibase-error-label": "Erreur de base de données non liée:",
+	"unlinkedwikibase-error-missing-id": "Le paramètre \"id\" doit être fourni.",
+	"unlinkedwikibase-error-invalid-id": "L'ID '$1' n'est pas au format requis d'un entier préfixé par 'Q'.",
+	"unlinkedwikibase-error-property-name-not-found": "La propriété \"$1\" n'a pas été trouvée.",
+	"unlinkedwikibase-sidebar-link": "Identifiant d’entité Wikibase",
+	"unlinkedwikibase-infoaction-label": "Identifiant d’entité Wikibase",
+	"unlinkedwikibase-infoaction-other-usage": "(utilisé sur $1 {{PLURAL:$1| page|pages}})"
+}
