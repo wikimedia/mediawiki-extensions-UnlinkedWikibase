@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"McDutchie"
+		]
+	},
+	"unlinkedwikibase-desc": "Acceder al datos de entitates Wikibase desde wikis non ligate a un sito Wikibase.",
+	"unlinkedwikibase-error-label": "Error de UnlinkedWikibase:",
+	"unlinkedwikibase-error-missing-id": "Le parametro ‘id’ debe esser fornite."
+}
