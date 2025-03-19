@@ -6,5 +6,10 @@
 	},
 	"unlinkedwikibase-desc": "Acceder al datos de entitates Wikibase desde wikis non ligate a un sito Wikibase.",
 	"unlinkedwikibase-error-label": "Error de UnlinkedWikibase:",
-	"unlinkedwikibase-error-missing-id": "Le parametro ‘id’ debe esser fornite."
+	"unlinkedwikibase-error-missing-id": "Le parametro ‘id’ debe esser fornite.",
+	"unlinkedwikibase-error-invalid-id": "Le ID ‘$1’ non es in le formato requisite de un numero integre con prefixo ‘Q’.",
+	"unlinkedwikibase-error-property-name-not-found": "Le proprietate ‘$1’ non poteva esser trovate.",
+	"unlinkedwikibase-sidebar-link": "Entitate Wikibase",
+	"unlinkedwikibase-infoaction-label": "ID de entitate Wikibase",
+	"unlinkedwikibase-infoaction-other-usage": "(usate sur $1 pagina{{PLURAL:$1||s}})"
 }
