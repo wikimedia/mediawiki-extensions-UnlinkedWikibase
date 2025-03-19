@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"McDutchie"
+		]
+	},
+	"unlinkedwikibase-error-label": "Error de UnlinkedWikibase:",
+	"unlinkedwikibase-error-missing-id": "Le parametro ‘id’ debe esser fornite."
+}
