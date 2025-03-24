@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": [
+			"McDutchie"
+		]
+	},
+	"unlinkedwikibase-error-label": "Error de UnlinkedWikibase:",
+	"unlinkedwikibase-error-missing-id": "Le parametro ‘id’ debe esser fornite.",
+	"unlinkedwikibase-error-invalid-id": "Le ID ‘$1’ non es in le formato requisite de un numero integre con prefixo ‘Q’.",
+	"unlinkedwikibase-infoaction-label": "ID de entitate Wikibase"
+}
