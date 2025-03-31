@@ -12,5 +12,7 @@
 	"unlinkedwikibase-error-property-name-not-found": "Property '$1' could not be found.",
 	"unlinkedwikibase-sidebar-link": "Wikibase entity",
 	"unlinkedwikibase-infoaction-label": "Wikibase entity ID",
-	"unlinkedwikibase-infoaction-other-usage": "(used on $1 {{PLURAL:$1|page|pages}})"
+	"unlinkedwikibase-infoaction-other-usage": "(used on $1 {{PLURAL:$1|page|pages}})",
+	"unlinkedwikibase-special-jobqueue-size": "UnlinkedWikibase job queue size: $1",
+	"unlinkedwikibase-special-no-jobs": "The [[mw:Object cache#WAN_cache|site cache]] is not configured for use of the job queue to fetch data, so pages using UnlinkedWikibase may load slowly."
 }

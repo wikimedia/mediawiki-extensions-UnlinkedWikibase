@@ -18,7 +18,8 @@
 		]
 	},
 	"ExtensionMessagesFiles": {
-		"UnlinkedWikibaseMagicWords": "UnlinkedWikibase.i18n.magic.php"
+		"UnlinkedWikibaseMagicWords": "UnlinkedWikibase.i18n.magic.php",
+		"UnlinkedWikibaseAliases": "UnlinkedWikibase.i18n.aliases.php"
 	},
 	"AutoloadNamespaces": {
 		"MediaWiki\\Extension\\UnlinkedWikibase\\": "includes/"
@@ -48,6 +49,9 @@
 				"MainConfig"
 			]
 		}
+	},
+	"SpecialPages": {
+		"UnlinkedWikibase": "MediaWiki\\Extension\\UnlinkedWikibase\\SpecialUnlinkedWikibase"
 	},
 	"config": {
 		"UnlinkedWikibaseBaseUrl": {

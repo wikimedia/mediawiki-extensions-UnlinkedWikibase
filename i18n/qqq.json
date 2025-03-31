@@ -12,5 +12,7 @@
 	"unlinkedwikibase-error-property-name-not-found": "Error message displayed when a property name or ID couldn't be found.\n\nParameters:\n* $1 — The supplied name or ID.",
 	"unlinkedwikibase-sidebar-link": "Label for the link in the sidebar's toolbox.",
 	"unlinkedwikibase-infoaction-label": "Label in the table on ?action=info, shown next to the page's Wikibase ID.",
-	"unlinkedwikibase-infoaction-other-usage": "Text shown after the page's Wikibase ID to indicate how many pages use this ID."
+	"unlinkedwikibase-infoaction-other-usage": "Text shown after the page's Wikibase ID to indicate how many pages use this ID.",
+	"unlinkedwikibase-special-jobqueue-size": "Statement indicating the current number of pending jobs.\n\nParameters:\n* $1 — The integer number of jobs remaining to be processed.",
+	"unlinkedwikibase-special-no-jobs": "Message shown when a wiki's cache is not configured correctly for UnlinkedWikibase to be able to fetch data via the job queue."
 }

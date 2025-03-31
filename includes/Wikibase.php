@@ -69,9 +69,20 @@ class Wikibase {
 	}
 
 	/**
-	 * Get data about a single Wikibase entity.
+	 * Get data about a single Wikibase entity and add a tracking page property.
 	 */
 	public function getEntity( Parser $parser, string $id ): ?array {
+		$entity = $this->getEntityData( $id );
+		// Add this ID to the list of in-use entities.
+		$this->entityIds[ $id ] = $id;
+		$parser->getOutput()->setPageProperty( Hooks::PAGE_PROP_ENTITIES_USED_PREFIX . count( $this->entityIds ), $id );
+		return $entity;
+	}
+
+	/**
+	 * Get data about a single Wikibase entity.
+	 */
+	public function getEntityData( string $id ): ?array {
 		$url = $this->getEntityUrl( $id );
 		$ttl = $this->config->get( 'UnlinkedWikibaseEntityTTL' );
 		if ( $ttl === null ) {
@@ -83,9 +94,6 @@ class Wikibase {
 		if ( $entity ) {
 			$id = $entity['id'];
 		}
-		// Add this ID to the list of in-use entities.
-		$this->entityIds[ $id ] = $id;
-		$parser->getOutput()->setPageProperty( Hooks::PAGE_PROP_ENTITIES_USED_PREFIX . count( $this->entityIds ), $id );
 		return $entity;
 	}
 
@@ -138,6 +146,13 @@ class Wikibase {
 			// staleTTL also defined in FetchJob.
 			[ 'staleTTL' => BagOStuff::TTL_WEEK ]
 		);
+	}
+
+	/**
+	 * Get the current UnlinkedWikibase job queue size.
+	 */
+	public function getJobQueueSize(): int {
+		return $this->jobQueueGroup->getQueueSizes()[ FetchJob::JOB_NAME ] ?? 0;
 	}
 
 	/**
