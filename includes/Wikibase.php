@@ -11,6 +11,7 @@ use MediaWiki\Http\HttpRequestFactory;
 use MediaWiki\MediaWikiServices;
 use Parser;
 use WANObjectCache;
+use Wikimedia\ObjectCache\BagOStuff;
 
 class Wikibase {
 
@@ -124,7 +125,7 @@ class Wikibase {
 			return $data;
 		}
 		// If the cache doesn't support having the fetch happen in the job queue, fetch the data immediately.
-		if ( $this->cache->getQoS( $this->cache::ATTR_DURABILITY ) < $this->cache::QOS_DURABILITY_SERVICE ) {
+		if ( $this->cache->getQoS( BagOStuff::ATTR_DURABILITY ) < BagOStuff::QOS_DURABILITY_SERVICE ) {
 			$newData = $this->fetchWithoutCache( $url );
 			$this->cache->set( $cacheKey, $newData, $ttl );
 			return $newData;
