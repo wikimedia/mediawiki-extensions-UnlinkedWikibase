@@ -6,17 +6,17 @@
 
 namespace MediaWiki\Extension\UnlinkedWikibase;
 
-use Config;
-use Language;
-use LanguageCode;
+use MediaWiki\Config\Config;
 use MediaWiki\Hook\InfoActionHook;
 use MediaWiki\Hook\OutputPageParserOutputHook;
 use MediaWiki\Hook\ParserFirstCallInitHook;
 use MediaWiki\Hook\SidebarBeforeOutputHook;
 use MediaWiki\Html\Html;
+use MediaWiki\Language\Language;
+use MediaWiki\Language\LanguageCode;
 use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
-use Parser;
+use MediaWiki\Parser\Parser;
 use Wikimedia\Rdbms\LBFactory;
 
 /**

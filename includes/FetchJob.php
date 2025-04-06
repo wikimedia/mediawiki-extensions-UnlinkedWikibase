@@ -2,10 +2,10 @@
 
 namespace MediaWiki\Extension\UnlinkedWikibase;
 
-use Config;
-use Job;
+use MediaWiki\Config\Config;
+use MediaWiki\JobQueue\Job;
 use MediaWiki\Title\Title;
-use WANObjectCache;
+use Wikimedia\ObjectCache\WANObjectCache;
 
 class FetchJob extends Job {
 

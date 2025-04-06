@@ -2,12 +2,12 @@
 
 namespace MediaWiki\Extension\UnlinkedWikibase;
 
-use Config;
+use MediaWiki\Config\Config;
 use MediaWiki\Extension\Scribunto\Engines\LuaCommon\LibraryBase;
 use MediaWiki\Extension\Scribunto\Engines\LuaCommon\LuaEngine;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Title\Title;
-use WANObjectCache;
+use Wikimedia\ObjectCache\WANObjectCache;
 
 class UnlinkedWikibaseLuaLibrary extends LibraryBase {
 

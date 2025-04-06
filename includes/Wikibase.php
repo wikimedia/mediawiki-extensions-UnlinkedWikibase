@@ -3,15 +3,15 @@
 namespace MediaWiki\Extension\UnlinkedWikibase;
 
 use DateTime;
-use JobQueueGroup;
-use JobSpecification;
-use Language;
 use MediaWiki\Config\Config;
 use MediaWiki\Http\HttpRequestFactory;
+use MediaWiki\JobQueue\JobQueueGroup;
+use MediaWiki\JobQueue\JobSpecification;
+use MediaWiki\Language\Language;
 use MediaWiki\MediaWikiServices;
-use Parser;
-use WANObjectCache;
+use MediaWiki\Parser\Parser;
 use Wikimedia\ObjectCache\BagOStuff;
+use Wikimedia\ObjectCache\WANObjectCache;
 
 class Wikibase {
 
