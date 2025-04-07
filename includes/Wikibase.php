@@ -119,20 +119,32 @@ class Wikibase {
 	 * Fetch data from a JSON URL.
 	 */
 	public function fetch( string $url, int $ttl ): array {
-		$cacheKey = $this->cache->makeKey( 'ext-UnlinkedWikibase', $url );
-		$data = $this->cache->get( $cacheKey );
-		if ( $data ) {
-			return $data;
-		}
-		// If the cache doesn't support having the fetch happen in the job queue, fetch the data immediately.
-		if ( $this->cache->getQoS( BagOStuff::ATTR_DURABILITY ) < BagOStuff::QOS_DURABILITY_SERVICE ) {
-			$newData = $this->fetchWithoutCache( $url );
-			$this->cache->set( $cacheKey, $newData, $ttl );
-			return $newData;
-		}
-		// If it's not cached, create a job that will cache it.
-		$this->jobQueueGroup->lazyPush( new JobSpecification( FetchJob::JOB_NAME, [ 'url' => $url, 'ttl' => $ttl ] ) );
-		return [];
+		$wb = $this;
+		$jobQueueGroup = $this->jobQueueGroup;
+		return $this->cache->getWithSetCallback(
+			$this->cache->makeKey( 'ext-UnlinkedWikibase', $url ),
+			$ttl,
+			static function ( $oldValue, &$ttl, array &$setOpts, $oldAsOf ) use ( $wb, $jobQueueGroup, $url ) {
+				// If the cache doesn't support having the fetch happen in the job queue, fetch the data immediately.
+				if ( !$wb->canCache() ) {
+					return $wb->fetchWithoutCache( $url );
+				}
+				// If it's not cached, create a job that will cache it.
+				$job = new JobSpecification( FetchJob::JOB_NAME, [ 'url' => $url, 'ttl' => $ttl ] );
+				$jobQueueGroup->lazyPush( $job );
+				// Return the old value if possible.
+				return $oldValue ?: [];
+			},
+			// staleTTL also defined in FetchJob.
+			[ 'staleTTL' => BagOStuff::TTL_WEEK ]
+		);
+	}
+
+	/**
+	 * Is the cache able to store data from the job queue?
+	 */
+	public function canCache(): bool {
+		return $this->cache->getQoS( BagOStuff::ATTR_DURABILITY ) >= BagOStuff::QOS_DURABILITY_SERVICE;
 	}
 
 	public function fetchWithoutCache( string $url ): array {

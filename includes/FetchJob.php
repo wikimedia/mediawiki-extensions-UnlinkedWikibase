@@ -5,6 +5,7 @@ namespace MediaWiki\Extension\UnlinkedWikibase;
 use MediaWiki\Config\Config;
 use MediaWiki\JobQueue\Job;
 use MediaWiki\Title\Title;
+use Wikimedia\ObjectCache\BagOStuff;
 use Wikimedia\ObjectCache\WANObjectCache;
 
 class FetchJob extends Job {
@@ -40,12 +41,12 @@ class FetchJob extends Job {
 			$ttl = $this->config->get( 'UnlinkedWikibaseEntityTTL' );
 		}
 		if ( $ttl === null ) {
-			$ttl = $this->cache::TTL_INDEFINITE;
+			$ttl = BagOStuff::TTL_INDEFINITE;
 		}
 
 		$wikibase = new Wikibase();
 		$data = $wikibase->fetchWithoutCache( $url );
-		$this->cache->set( $cacheKey, $data, $ttl );
+		$this->cache->set( $cacheKey, $data, $ttl, [ 'staleTTL' => BagOStuff::TTL_WEEK ] );
 
 		return true;
 	}
