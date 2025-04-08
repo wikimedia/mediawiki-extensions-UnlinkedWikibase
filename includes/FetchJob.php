@@ -2,8 +2,8 @@
 
 namespace MediaWiki\Extension\UnlinkedWikibase;
 
+use Job;
 use MediaWiki\Config\Config;
-use MediaWiki\JobQueue\Job;
 use MediaWiki\Title\Title;
 use Wikimedia\ObjectCache\BagOStuff;
 use Wikimedia\ObjectCache\WANObjectCache;
