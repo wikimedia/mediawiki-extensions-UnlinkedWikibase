@@ -9,5 +9,7 @@
 	"unlinkedwikibase-error-property-name-not-found": "Die Eigenschaft „$1“ konnte nicht gefunden werden.",
 	"unlinkedwikibase-sidebar-link": "Wikibase-Objekt",
 	"unlinkedwikibase-infoaction-label": "Wikibase-Objekt-ID",
-	"unlinkedwikibase-infoaction-other-usage": "(verwendet auf {{PLURAL:$1|einer Seite|$1 Seiten}})"
+	"unlinkedwikibase-infoaction-other-usage": "(verwendet auf {{PLURAL:$1|einer Seite|$1 Seiten}})",
+	"unlinkedwikibase-special-jobqueue-size": "Größe der UnlinkedWikibase-Warteschlange: $1",
+	"unlinkedwikibase-special-no-jobs": "Der [[mw:Object cache#WAN_cache|Site-Cache]] ist nicht für die Verwendung der Job Queue zum Abrufen von Daten konfiguriert, so dass Seiten, die die UnlinkedWikibase verwenden, langsam laden können."
 }
