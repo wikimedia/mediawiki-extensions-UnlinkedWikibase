@@ -12,5 +12,7 @@
 	"unlinkedwikibase-error-property-name-not-found": "لم يتم العثور على الخاصية ' $1 '.",
 	"unlinkedwikibase-sidebar-link": "كيان ويكيبيس",
 	"unlinkedwikibase-infoaction-label": "معرف كيان ويكيبيس",
-	"unlinkedwikibase-infoaction-other-usage": "تمت إزالة $1 {{PLURAL:$1|صفحة}}"
+	"unlinkedwikibase-infoaction-other-usage": "تمت إزالة $1 {{PLURAL:$1|صفحة}}",
+	"unlinkedwikibase-special-jobqueue-size": "حجم قائمة مهام ويكيبيديا غير المرتبطة: $1",
+	"unlinkedwikibase-special-no-jobs": "لم يتم تكوين [[mw:Object cache#WAN_cache|ذاكرة التخزين المؤقت للموقع]] لاستخدام قائمة المهام لجلب البيانات، لذا قد يتم تحميل الصفحات التي تستخدم UnlinkedWikibase ببطء."
 }

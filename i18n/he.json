@@ -12,5 +12,7 @@
 	"unlinkedwikibase-error-property-name-not-found": "לא היה אפשר למצוא את המאפיין המילונית \"$1\".",
 	"unlinkedwikibase-sidebar-link": "ישות ויקיבייס",
 	"unlinkedwikibase-infoaction-label": "מזהה ישות ויקיבייס",
-	"unlinkedwikibase-infoaction-other-usage": "(בשימוש {{PLURAL:$1|בדף אחד|ב־$1 דפים}})"
+	"unlinkedwikibase-infoaction-other-usage": "(בשימוש {{PLURAL:$1|בדף אחד|ב־$1 דפים}})",
+	"unlinkedwikibase-special-jobqueue-size": "גודל תור UnlinkedWikibase‏: $1",
+	"unlinkedwikibase-special-no-jobs": "[[mw:Object cache#WAN_cache|מטמון האתר]] אינו מוגדר לשימוש בתור המשימות כדי לשלוף נתונים, כך שדפים שמשתמשים ב־UnlinkedWikibase עשויים להיטען לאט."
 }

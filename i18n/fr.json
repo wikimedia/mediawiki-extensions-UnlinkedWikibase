@@ -11,5 +11,7 @@
 	"unlinkedwikibase-error-property-name-not-found": "La propriété \"$1\" n'a pas été trouvée.",
 	"unlinkedwikibase-sidebar-link": "Identifiant d’entité Wikibase",
 	"unlinkedwikibase-infoaction-label": "Identifiant d’entité Wikibase",
-	"unlinkedwikibase-infoaction-other-usage": "(utilisé sur $1 {{PLURAL:$1| page|pages}})"
+	"unlinkedwikibase-infoaction-other-usage": "(utilisé sur $1 {{PLURAL:$1| page|pages}})",
+	"unlinkedwikibase-special-jobqueue-size": "Taille de la file d'attente des tâches UnlinkedWikibase : $1",
+	"unlinkedwikibase-special-no-jobs": "Le [[mw:Object cache#WAN_cache|cache du site]] n'est pas configuré pour utiliser la file d'attente des tâches afin de récupérer des données, donc les pages utilisant UnlinkedWikibase peuvent se charger lentement."
 }

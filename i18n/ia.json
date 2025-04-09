@@ -11,5 +11,7 @@
 	"unlinkedwikibase-error-property-name-not-found": "Le proprietate ‘$1’ non poteva esser trovate.",
 	"unlinkedwikibase-sidebar-link": "Entitate Wikibase",
 	"unlinkedwikibase-infoaction-label": "ID de entitate Wikibase",
-	"unlinkedwikibase-infoaction-other-usage": "(usate sur $1 pagina{{PLURAL:$1||s}})"
+	"unlinkedwikibase-infoaction-other-usage": "(usate sur $1 pagina{{PLURAL:$1||s}})",
+	"unlinkedwikibase-special-jobqueue-size": "Numero de actiones pendente de UnlinkedWikibase: $1",
+	"unlinkedwikibase-special-no-jobs": "Le [[mw:Object cache#WAN_cache|cache del sito]] non es configurate pro recuperar datos per medio del cauda de actiones, dunque le paginas que usa UnlinkedWikibase pote cargar se lentemente."
 }
