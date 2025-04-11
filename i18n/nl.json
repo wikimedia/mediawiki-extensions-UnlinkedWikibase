@@ -11,5 +11,7 @@
 	"unlinkedwikibase-error-property-name-not-found": "De eigenschap ‘$1’ kon niet worden gevonden.",
 	"unlinkedwikibase-sidebar-link": "Wikibase-entiteit",
 	"unlinkedwikibase-infoaction-label": "Wikibase-entiteits-ID",
-	"unlinkedwikibase-infoaction-other-usage": "(gebruikt op $1 pagina{{PLURAL:$1||’s}})"
+	"unlinkedwikibase-infoaction-other-usage": "(gebruikt op $1 pagina{{PLURAL:$1||’s}})",
+	"unlinkedwikibase-special-jobqueue-size": "Aantal openstaande UnlinkedWikibase-taken: $1",
+	"unlinkedwikibase-special-no-jobs": "De [[mw:Object cache#WAN_cache|sitecache]] is niet ingesteld voor het gebruik van de takenwachtrij om gegevens op te halen. Daardoor kunnen pagina’s die gebruik maken van UnlinkedWikibase langzaam geladen worden."
 }
