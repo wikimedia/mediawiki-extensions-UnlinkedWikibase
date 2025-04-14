@@ -11,5 +11,7 @@
 	"unlinkedwikibase-error-property-name-not-found": "Не најдов својство „$1“.",
 	"unlinkedwikibase-sidebar-link": "Единица на Викибазата",
 	"unlinkedwikibase-infoaction-label": "Назнака на единицата на Викибазата",
-	"unlinkedwikibase-infoaction-other-usage": "(се користи на $1 {{PLURAL:$1|страница|страници}})"
+	"unlinkedwikibase-infoaction-other-usage": "(се користи на $1 {{PLURAL:$1|страница|страници}})",
+	"unlinkedwikibase-special-jobqueue-size": "Големина на редицата на UnlinkedWikibase: $1",
+	"unlinkedwikibase-special-no-jobs": "[[mw:Object cache#WAN_cache|Меѓускладот на мрежното место]] не е поставен за користење на редица работи за добивање на податоци, па затоа страниците што користат UnlinkedWikibase може бавно да се вчитуваат."
 }
