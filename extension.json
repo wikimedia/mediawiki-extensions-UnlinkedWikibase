@@ -81,6 +81,10 @@
 		"UnlinkedWikibaseSitelinkSkippedLangs": {
 			"description": "List of language codes to skip",
 			"value": []
+		},
+		"UnlinkedWikibaseCache": {
+			"description": "The cache custom to extension.",
+			"value": null
 		}
 	},
 	"manifest_version": 2

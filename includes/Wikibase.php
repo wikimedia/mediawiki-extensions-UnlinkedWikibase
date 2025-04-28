@@ -40,9 +40,15 @@ class Wikibase {
 		$services = MediaWikiServices::getInstance();
 		$this->config = $services->getMainConfig();
 		$this->requestFactory = $services->getHttpRequestFactory();
-		$this->cache = $services->getMainWANObjectCache();
 		$this->contentLang = $services->getContentLanguage();
 		$this->jobQueueGroup = $services->getJobQueueGroupFactory()->makeJobQueueGroup();
+
+		if ( $this->config->get( "UnlinkedWikibaseCache" ) ) {
+			$this->cache = $services->getObjectCacheFactory()->
+				getInstance( $this->config->get( "UnlinkedWikibaseCache" ) );
+		} else {
+			$this->cache = $services->getMainWANObjectCache();
+		}
 	}
 
 	/**
