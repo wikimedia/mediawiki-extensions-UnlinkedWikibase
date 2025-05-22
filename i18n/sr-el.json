@@ -1,0 +1,7 @@
+{
+	"@metadata": {
+		"authors": []
+	},
+	"unlinkedwikibase-error-property-name-not-found": "Svojstvo „$1” nije pronađeno.",
+	"unlinkedwikibase-infoaction-other-usage": "(koristi se na $1 {{PLURAL:$1|stranici|stranica}})"
+}
