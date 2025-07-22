@@ -85,6 +85,10 @@
 		"UnlinkedWikibaseCache": {
 			"description": "The cache custom to extension.",
 			"value": null
+		},
+		"UnlinkedWikibaseFormatterUrlProp": {
+			"description": "ID of the 'formatter URL' property.",
+			"value": "P1630"
 		}
 	},
 	"manifest_version": 2

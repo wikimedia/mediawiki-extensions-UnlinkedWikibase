@@ -4,8 +4,6 @@ namespace MediaWiki\Extension\UnlinkedWikibase\Test;
 
 use MediaWikiIntegrationTestCase;
 use MockHttpTrait;
-use MWHttpRequest;
-use StatusValue;
 use Wikimedia\Rdbms\IDatabase;
 
 /**
@@ -16,21 +14,13 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 
 	use MockHttpTrait;
 
-	private function getRequest( string $id ) {
-		$request1 = $this->createMock( MWHttpRequest::class );
-		$request1->method( 'execute' )->willReturn( new StatusValue() );
-		$request1->method( 'getContent' )
-			->willReturn( json_encode( [
-				'entities' => [ [ 'id' => $id ] ]
-			] ) );
-		return $request1;
-	}
-
 	public function testEntityUsageIsSavedToProperties() {
-		$this->installMockHttp( [
-			$this->getRequest( 'Q123' ),
-			$this->getRequest( 'Q456' ),
-		] );
+		$this->installMockHttp( function ( $url ) {
+			preg_match( '/(Q[0-9]+)/', $url, $matches );
+			return $this->makeFakeHttpRequest( json_encode( [
+				'entities' => [ [ 'id' => $matches[1] ?? null ] ],
+			] ) );
+		} );
 		$this->overrideConfigValue( 'UnlinkedWikibaseSitelinkSuffix', null );
 
 		$this->editPage( 'Module:Test', '

@@ -219,8 +219,16 @@ class Wikibase {
 
 		// External ID
 		if ( $claim['mainsnak']['datatype'] === 'external-id' ) {
-			// @todo Handle formatter URL.
-			return $claim['mainsnak']['datavalue']['value'];
+			$propId = $claim['mainsnak']['property'];
+			$propData = $this->getEntity( $parser, $propId );
+			$formatterUrlProp = $this->config->get( 'UnlinkedWikibaseFormatterUrlProp' );
+			if ( isset( $propData['claims'][$formatterUrlProp][0]['mainsnak']['datavalue']['value'] ) ) {
+				$urlFormat = $propData['claims'][$formatterUrlProp][0]['mainsnak']['datavalue']['value'];
+				$url = str_replace( '$1', $claim['mainsnak']['datavalue']['value'], $urlFormat );
+				return '[' . $url . ' ' . $claim['mainsnak']['datavalue']['value'] . ']';
+			} else {
+				return $claim['mainsnak']['datavalue']['value'];
+			}
 		}
 
 		// Item
