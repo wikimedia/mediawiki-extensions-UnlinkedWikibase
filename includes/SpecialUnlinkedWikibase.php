@@ -20,7 +20,7 @@ class SpecialUnlinkedWikibase extends QueryPage {
 	/** @inheritDoc */
 	public function execute( $par ) {
 		$wb = new Wikibase();
-		$queue = $this->msg( 'unlinkedwikibase-special-jobqueue-size', $wb->getJobQueueSize() );
+		$queue = $this->msg( 'unlinkedwikibase-special-jobqueue-size', $wb->getJobQueueSize() )->text();
 		$out = Html::element( 'p', [], $queue );
 		if ( !$wb->canCache() ) {
 			$out .= Html::rawElement( 'p', [], $this->msg( 'unlinkedwikibase-special-no-jobs' )->parse() );
