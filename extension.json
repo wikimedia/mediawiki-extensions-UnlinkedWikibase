@@ -71,7 +71,11 @@
 			"value": "3600"
 		},
 		"UnlinkedWikibaseStatementsParserFunc": {
-			"description": "Whether to enable the {{#statements:}} parser function.",
+			"description": "DEPRECATED: Use UnlinkedWikibaseImitationMode instead. Whether to enable the {{#statements:}} parser function.",
+			"value": false
+		},
+		"UnlinkedWikibaseImitationMode": {
+			"description": "Whether to enable {{#statements:}} and {{#property:}} parser functions.",
 			"value": false
 		},
 		"UnlinkedWikibaseSitelinkSuffix": {

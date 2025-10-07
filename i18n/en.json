@@ -8,6 +8,8 @@
 	"unlinkedwikibase-desc": "Access Wikibase entity data from wikis that are not linked to a Wikibase site.",
 	"unlinkedwikibase-error-label": "UnlinkedWikibase error:",
 	"unlinkedwikibase-error-missing-id": "The 'id' parameter must be supplied.",
+	"unlinkedwikibase-error-missing-property": "Property parameter is required.",
+	"unlinkedwikibase-error-statements-entity-not-set": "No entity is set for this page. Use {{#unlinkedwikibase:id=Q...}} or specify |from=Q... parameter.",
 	"unlinkedwikibase-error-invalid-id": "ID '$1' is not in the required format of an integer prefixed with 'Q'.",
 	"unlinkedwikibase-error-property-name-not-found": "Property '$1' could not be found.",
 	"unlinkedwikibase-sidebar-link": "Wikibase entity",

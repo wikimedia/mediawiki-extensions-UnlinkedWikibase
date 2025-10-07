@@ -8,8 +8,10 @@ use JobSpecification;
 use MediaWiki\Config\Config;
 use MediaWiki\Http\HttpRequestFactory;
 use MediaWiki\Language\Language;
+use MediaWiki\Languages\LanguageFallback;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Parser\Parser;
+use MediaWiki\WikiMap\WikiMap;
 use Wikimedia\ObjectCache\BagOStuff;
 use Wikimedia\ObjectCache\WANObjectCache;
 
@@ -27,6 +29,9 @@ class Wikibase {
 	/** @var Language */
 	private $contentLang;
 
+	/** @var LanguageFallback */
+	private $langFallback;
+
 	/** @var string[] */
 	private $entityIds = [];
 
@@ -41,6 +46,7 @@ class Wikibase {
 		$this->config = $services->getMainConfig();
 		$this->requestFactory = $services->getHttpRequestFactory();
 		$this->contentLang = $services->getContentLanguage();
+		$this->langFallback = $services->getLanguageFallback();
 		$this->jobQueueGroup = $services->getJobQueueGroupFactory()->makeJobQueueGroup();
 
 		if ( $this->config->get( "UnlinkedWikibaseCache" ) ) {
@@ -101,6 +107,172 @@ class Wikibase {
 			$id = $entity['id'];
 		}
 		return $entity;
+	}
+
+	/**
+	 * Return [ label|null, lang|null ] for an entity ID, using the page's target language
+	 * and fallback(s).
+	 *
+	 * @param Parser $parser
+	 * @param string $id
+	 * @return array{0:?string,1:?string}
+	 */
+	public function getLabel( Parser $parser, string $id ): array {
+		$entity = $this->getEntity( $parser, $id );
+		if ( !$entity ) {
+			return [ null, null ];
+		}
+
+		$labels = $entity['labels'] ?? [];
+		if ( !$labels ) {
+			return [ null, null ];
+		}
+
+		$targetLang = $parser->getTargetLanguage()->getCode();
+		$langs = array_unique( [
+			$targetLang,
+			...$this->langFallback->getAll( $targetLang ),
+		] );
+		foreach ( $langs as $lang ) {
+			if ( isset( $entity['labels'][$lang]['value'] ) ) {
+				return [ $entity['labels'][$lang]['value'], $lang ];
+			}
+		}
+
+		return [ null, null ];
+	}
+
+	/**
+	 * Return the label string for a specific language, or null if absent/invalid.
+	 *
+	 * @param Parser $parser
+	 * @param string $id
+	 * @param string $languageCode
+	 * @return ?string
+	 */
+	public function getLabelByLanguage( Parser $parser, string $id, string $languageCode ): ?string {
+		$entity = $this->getEntity( $parser, $id );
+		if ( !$entity ) {
+			return null;
+		}
+
+		$labels = $entity['labels'] ?? [];
+		if ( !$labels ) {
+			return null;
+		}
+
+		if ( isset( $labels[$languageCode]['value'] ) && is_string( $labels[$languageCode]['value'] ) ) {
+			return $labels[$languageCode]['value'];
+		}
+
+		return null;
+	}
+
+	/**
+	 * Return [ description|null, lang|null ] for an entity ID, using the page
+	 * target language (then site content language, then configured fallbacks, then any).
+	 *
+	 * @param Parser $parser
+	 * @param string $id
+	 * @return array{0:?string,1:?string}
+	 */
+	public function getDescription( Parser $parser, string $id ): array {
+		$entity = $this->getEntity( $parser, $id );
+		if ( !$entity ) {
+			return [ null, null ];
+		}
+
+		$descriptions = $entity['descriptions'] ?? [];
+		if ( !$descriptions ) {
+			return [ null, null ];
+		}
+
+		$targetLang = $parser->getTargetLanguage()->getCode();
+		$langs = array_unique( [
+			$targetLang,
+			...$this->langFallback->getAll( $targetLang ),
+		] );
+		foreach ( $langs as $lang ) {
+			if ( isset( $entity['descriptions'][$lang]['value'] ) ) {
+				return [ $entity['descriptions'][$lang]['value'], $lang ];
+			}
+		}
+
+		return [ null, null ];
+	}
+
+	/**
+	 * Return the description string for a specific language, or null if absent/invalid.
+	 *
+	 * @param Parser $parser
+	 * @param string $id
+	 * @param string $languageCode
+	 * @return ?string
+	 */
+	public function getDescriptionByLanguage( Parser $parser, string $id, string $languageCode ): ?string {
+		$entity = $this->getEntity( $parser, $id );
+		if ( !$entity ) {
+			return null;
+		}
+
+		$descriptions = $entity['descriptions'] ?? [];
+		if ( !$descriptions ) {
+			return null;
+		}
+
+		if ( isset( $descriptions[$languageCode]['value'] ) && is_string( $descriptions[$languageCode]['value'] ) ) {
+			return $descriptions[$languageCode]['value'];
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the title of the corresponding page on the local wiki or nil if it doesn't exist.
+	 * When globalSiteId is given, the page title on the specified wiki is returned, rather
+	 * than the one on the local wiki.
+	 *
+	 * @param Parser $parser
+	 * @param string $itemId
+	 * @param string|null $globalSiteId Uses current site ID if null.
+	 * @return ?string The sitelink title, or null if not present/invalid
+	 */
+	public function getSiteLinkPageName( Parser $parser, string $itemId, ?string $globalSiteId ): ?string {
+		$entity = $this->getEntity( $parser, $itemId );
+		if ( !$entity ) {
+			return null;
+		}
+		$siteId = $globalSiteId ?: WikiMap::getCurrentWikiId();
+		$sitelinks = $entity['sitelinks'] ?? [];
+		if ( !$sitelinks ) {
+			return null;
+		}
+
+		if ( isset( $sitelinks[$siteId]['title'] ) && is_string( $sitelinks[$siteId]['title'] ) ) {
+			return $sitelinks[$siteId]['title'];
+		}
+
+		return $sitelinks[strtolower( $siteId )]['title'] ?? null;
+	}
+
+	/**
+	 * Returns a list of all badges assigned to a site link.
+	 * When globalSiteId is given, the badges for the site link to the specified
+	 * wiki are returned. This defaults to the local wiki.
+	 *
+	 * @param Parser $parser
+	 * @param string $itemId
+	 * @param string|null $globalSiteId Uses current site ID if null.
+	 * @return string[] List of badge item IDs, empty if none
+	 */
+	public function getBadges( Parser $parser, string $itemId, ?string $globalSiteId ): array {
+		$entity = $this->getEntity( $parser, $itemId );
+		if ( !$entity ) {
+			return [];
+		}
+
+		$siteId = $globalSiteId ?: WikiMap::getCurrentWikiId();
+		return $entity['sitelinks'][$siteId]['badges'] ?? [];
 	}
 
 	/**

@@ -43,9 +43,16 @@ class UnlinkedWikibaseLuaLibrary extends LibraryBase {
 	public function register(): array {
 		$interfaceFuncs = [
 			'getEntity' => [ $this, 'getEntity' ],
+			'getLabel' => [ $this, 'getLabel' ],
+			'getLabelByLanguage' => [ $this, 'getLabelByLanguage' ],
+			'getDescription' => [ $this, 'getDescription' ],
+			'getDescriptionByLanguage' => [ $this, 'getDescriptionByLanguage' ],
+			'getSiteLinkPageName' => [ $this, 'getSiteLinkPageName' ],
+			'getBadges' => [ $this, 'getBadges' ],
 			'getLocalPageId' => [ $this, 'getLocalPageId' ],
 			'getEntityId' => [ $this, 'getEntityId' ],
 			'query' => [ $this, 'query' ],
+			'getEntityStatements' => [ $this, 'getEntityStatements' ],
 		];
 		$luaFile = dirname( __DIR__ ) . '/scribunto/UnlinkedWikibase.lua';
 		return $this->getEngine()->registerInterface( $luaFile, $interfaceFuncs );
@@ -67,6 +74,66 @@ class UnlinkedWikibaseLuaLibrary extends LibraryBase {
 		}
 		// Get the first value of the result (keyed by ID, which might be different to the ID requested).
 		return [ 'result' => $this->arrayConvertToOneIndex( $entity ) ];
+	}
+
+	/**
+	 * @param string $id A Wikibase item ID.
+	 * @return array{0:?string,1:?string} Array containing label, label language code.
+	 *     Null for both, if entity couldn't be found/ no label present.
+	 */
+	public function getLabel( string $id ): array {
+		return $this->wikibase->getLabel( $this->getParser(), $id );
+	}
+
+	/**
+	 * @param string $id A Wikibase item ID.
+	 * @param string $languageCode
+	 * @return array{0:?string}
+	 */
+	public function getLabelByLanguage( string $id, string $languageCode ) {
+		return [ $this->wikibase->getLabelByLanguage( $this->getParser(), $id, $languageCode ) ];
+	}
+
+	/**
+	 * @param string $id A Wikibase item ID.
+	 * @return array{0:?string,1:?string} Array containing description, description language code.
+	 *     Null for both, if entity couldn't be found/ no description present.
+	 */
+	public function getDescription( string $id ): array {
+		return $this->wikibase->getDescription( $this->getParser(), $id );
+	}
+
+	/**
+	 * @param string $id A Wikibase item ID.
+	 * @param string $languageCode
+	 * @return array{0:?string}
+	 */
+	public function getDescriptionByLanguage( string $id, string $languageCode ) {
+		return [ $this->wikibase->getDescriptionByLanguage( $this->getParser(), $id, $languageCode ) ];
+	}
+
+	/**
+	 * @param string $id A Wikibase item ID.
+	 * @param string|null $globalSiteId
+	 * @return array{0:?string} Null if no site link found.
+	 */
+	public function getSiteLinkPageName( string $id, ?string $globalSiteId ): array {
+		return [ $this->wikibase->getSiteLinkPageName( $this->getParser(), $id, $globalSiteId ) ];
+	}
+
+	/**
+	 * @param string $id A Wikibase item ID.
+	 * @param string|null $globalSiteId
+	 * @return string[]
+	 */
+	public function getBadges( string $id, ?string $globalSiteId ): array {
+		$badges = $this->wikibase->getBadges( $this->getParser(), $id, $globalSiteId );
+
+		if ( !$badges ) {
+			return [];
+		}
+
+		return $this->arrayConvertToOneIndex( $badges );
 	}
 
 	/**
@@ -173,5 +240,58 @@ class UnlinkedWikibaseLuaLibrary extends LibraryBase {
 				return [ 'result' => $entityId ];
 			}
 		);
+	}
+
+	/**
+	 * Get statements from an entity.
+	 *
+	 * @param string $entityId A Wikibase entity ID.
+	 * @param string $propertyId A Wikibase property ID.
+	 * @param string $rank Which statements to include. Either "best" or "all".
+	 * @return array Array of statements grouped by property ID.
+	 */
+	public function getEntityStatements( string $entityId, string $propertyId, string $rank ): array {
+		$entity = $this->wikibase->getEntity( $this->getParser(), $entityId );
+		if ( !$entity ) {
+			return [];
+		}
+
+		$claims = $entity['claims'] ?? [];
+		if ( !isset( $claims[$propertyId] ) ) {
+			return [];
+		}
+
+		$statements = $claims[$propertyId];
+
+		// If rank is "best", filter to get only the best ranked statements
+		if ( $rank === 'best' ) {
+			$statements = $this->filterBestStatements( $statements );
+		}
+
+		return [ 'result' => [ $propertyId => $this->arrayConvertToOneIndex( $statements ) ] ];
+	}
+
+	/**
+	 * Filter statements to return only "best" ranked ones.
+	 * Returns "preferred" statements if any exist, otherwise "normal" statements.
+	 * Never returns "deprecated" statements.
+	 *
+	 * @param array $statements
+	 * @return array
+	 */
+	private function filterBestStatements( array $statements ): array {
+		$preferredStatements = [];
+		$normalStatements = [];
+
+		foreach ( $statements as $statement ) {
+			$rank = $statement['rank'] ?? 'normal';
+			if ( $rank === 'preferred' ) {
+				$preferredStatements[] = $statement;
+			} elseif ( $rank === 'normal' ) {
+				$normalStatements[] = $statement;
+			}
+		}
+
+		return $preferredStatements ?: $normalStatements;
 	}
 }

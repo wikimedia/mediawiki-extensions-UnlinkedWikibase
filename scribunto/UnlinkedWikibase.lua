@@ -1,4 +1,7 @@
 local UnlinkedWikibase = {}
+local util = require 'libraryUtil'
+local checkType = util.checkType
+local checkTypeMulti = util.checkTypeMulti
 local php
 
 function UnlinkedWikibase.setupInterface( options )
@@ -65,6 +68,114 @@ end
 -- --
 function UnlinkedWikibase.getEntityIdForCurrentPage()
 	return UnlinkedWikibase.getEntityId( mw.title.getCurrentTitle().prefixedText )
+end
+
+-- Get the label, label language for the given entity id, if specified,
+-- or of the connected entity, if exists.
+--
+-- @param {string} [id]
+function UnlinkedWikibase.getLabelWithLang( id )
+	checkTypeMulti( 'getLabel', 1, id, { 'string', 'nil' } )
+	return php.getLabel( id )
+end
+
+-- Like UnlinkedWikibase.getLabelWithLang, but only returns the plain label.
+--
+-- @param {string} [id]
+function UnlinkedWikibase.getLabel( id )
+	checkTypeMulti( 'getLabel', 1, id, { 'string', 'nil' } )
+	local label, lang = UnlinkedWikibase.getLabelWithLang( id )
+	return label
+end
+
+-- Get the label in languageCode for the given entity id.
+--
+-- @param {string} id
+-- @param {string} languageCode
+function UnlinkedWikibase.getLabelByLang( id, languageCode )
+	checkType( 'getLabelByLang', 1, id, 'string' )
+	checkType( 'getLabelByLang', 2, languageCode, 'string' )
+	return php.getLabelByLanguage( id, languageCode )
+end
+
+-- Get the description in languageCode for the given entity id.
+--
+-- @param {string} id
+-- @param {string} languageCode
+function UnlinkedWikibase.getDescriptionByLang( id, languageCode )
+	checkType( 'getDescriptionByLang', 1, id, 'string' )
+	checkType( 'getDescriptionByLang', 2, languageCode, 'string' )
+	return php.getDescriptionByLanguage( id, languageCode )
+end
+
+-- Get the description, description language for the given entity id, if specified,
+-- or of the connected entity, if exists.
+--
+-- @param {string} [id]
+function UnlinkedWikibase.getDescriptionWithLang( id )
+	checkTypeMulti( 'getDescriptionWithLang', 1, id, { 'string', 'nil' } )
+	return php.getDescription( id )
+end
+
+-- Like UnlinkedWikibase.getDescriptionWithLang, but only returns the plain description.
+--
+-- @param {string} [id]
+function UnlinkedWikibase.getDescription( id )
+	checkTypeMulti( 'getDescription', 1, id, { 'string', 'nil' } )
+	local description, lang = UnlinkedWikibase.getDescriptionWithLang( id )
+	return description
+end
+
+-- Get the local sitelink title for the given entity id.
+--
+-- @param {string} itemId
+-- @param {string} [globalSiteId]
+function UnlinkedWikibase.getSitelink( itemId, globalSiteId )
+	checkType( 'getSitelink', 1, itemId, 'string' )
+	checkTypeMulti( 'getSitelink', 2, globalSiteId, { 'string', 'nil' } )
+	return php.getSiteLinkPageName( itemId, globalSiteId )
+end
+
+-- Return a list of badges from an item for a certain site (or the local wiki).
+--
+-- @param {string} itemId
+-- @param {string} [globalSiteId]
+function UnlinkedWikibase.getBadges( itemId, globalSiteId )
+	checkType( 'getBadges', 1, itemId, 'string' )
+	checkTypeMulti( 'getBadges', 2, globalSiteId, { 'string', 'nil' } )
+	return php.getBadges( itemId, globalSiteId )
+end
+
+-- Returns a table with the "best" statements matching the given property ID on the given entity
+-- ID. The definition of "best" is that the function will return "preferred" statements, if
+-- there are any, otherwise "normal" ranked statements. It will never return "deprecated"
+-- statements. This is what you usually want when surfacing values to an ordinary reader.
+--
+-- @param {string} entityId
+-- @param {string} propertyId
+function UnlinkedWikibase.getBestStatements( entityId, propertyId )
+	checkType( 'getBestStatements', 1, entityId, 'string' )
+	checkType( 'getBestStatements', 2, propertyId, 'string' )
+	local statements = php.getEntityStatements( entityId, propertyId, 'best' )
+	if statements and statements[propertyId] then
+		return statements[propertyId]
+	end
+	return {}
+end
+
+-- Returns a table with all statements (including all ranks, even "deprecated") matching the
+-- given property ID on the given entity ID.
+--
+-- @param {string} entityId
+-- @param {string} propertyId
+function UnlinkedWikibase.getAllStatements( entityId, propertyId )
+	checkType( 'getAllStatements', 1, entityId, 'string' )
+	checkType( 'getAllStatements', 2, propertyId, 'string' )
+	local statements = php.getEntityStatements( entityId, propertyId, 'all' )
+	if statements and statements[propertyId] then
+		return statements[propertyId]
+	end
+	return {}
 end
 
 return UnlinkedWikibase

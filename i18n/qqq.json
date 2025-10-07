@@ -8,6 +8,8 @@
 	"unlinkedwikibase-desc": "{{desc|name=UnlinkedWikibase|url=https://www.mediawiki.org/wiki/Special:MyLanguage/Extension:UnlinkedWikibase}}",
 	"unlinkedwikibase-error-label": "Label shown before any error message.",
 	"unlinkedwikibase-error-missing-id": "Error message displayed when the 'id' parameter is not given.",
+	"unlinkedwikibase-error-missing-property": "Error message displayed when the property parameter is not provided to {{#statements:}} or {{#property:}} parser functions.",
+	"unlinkedwikibase-error-statements-entity-not-set": "Error message displayed when using {{#statements:}} or {{#property:}} parser functions without setting an entity ID on the page or using the from parameter.",
 	"unlinkedwikibase-error-invalid-id": "Error message displayed when an invalid entity ID is provided.\n\nParameters:\n* $1 — The supplied ID value.",
 	"unlinkedwikibase-error-property-name-not-found": "Error message displayed when a property name or ID couldn't be found.\n\nParameters:\n* $1 — The supplied name or ID.",
 	"unlinkedwikibase-sidebar-link": "Label for the link in the sidebar's toolbox.",

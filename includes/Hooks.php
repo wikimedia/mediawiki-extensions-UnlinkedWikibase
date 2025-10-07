@@ -58,8 +58,18 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook, SidebarBeforeOut
 	 */
 	public function onParserFirstCallInit( $parser ) {
 		$parser->setFunctionHook( 'unlinkedwikibase', [ $this, 'renderMainParserFunction' ] );
-		if ( $this->config->get( 'UnlinkedWikibaseStatementsParserFunc' ) ) {
+		$enableImitation = $this->config->get( 'UnlinkedWikibaseImitationMode' );
+		$statementsParserFunc = $this->config->get( 'UnlinkedWikibaseStatementsParserFunc' );
+
+		if ( $statementsParserFunc ) {
+			wfDeprecatedMsg(
+				'$wgUnlinkedWikibaseStatementsParserFunc is deprecated, use $wgUnlinkedWikibaseImitationMode instead'
+			);
+		}
+
+		if ( $enableImitation || $statementsParserFunc ) {
 			$parser->setFunctionHook( 'statements', [ $this, 'renderStatements' ] );
+			$parser->setFunctionHook( 'property', [ $this, 'renderProperty' ] );
 		}
 		return true;
 	}
@@ -69,7 +79,27 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook, SidebarBeforeOut
 	 * @return mixed
 	 */
 	public function renderStatements( Parser $parser ) {
-		$params = $this->getParserFunctionArgs( func_get_args() );
+		return $this->renderPropertyClaims( $parser, func_get_args(), false );
+	}
+
+	/**
+	 * Render the {{#property:}} parser function.
+	 *
+	 * @param Parser $parser
+	 * @return mixed
+	 */
+	public function renderProperty( Parser $parser ) {
+		return $this->renderPropertyClaims( $parser, func_get_args(), true );
+	}
+
+	/**
+	 * @param Parser $parser
+	 * @param array $args Function arguments including parser
+	 * @param bool $rawValues If true, return raw values; if false, return formatted values
+	 * @return mixed
+	 */
+	private function renderPropertyClaims( Parser $parser, array $args, bool $rawValues ) {
+		$params = $this->getParserFunctionArgs( $args );
 		if ( !isset( $params[0] ) ) {
 			return $this->getError( 'unlinkedwikibase-error-missing-property' );
 		}
@@ -105,10 +135,57 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook, SidebarBeforeOut
 			$claims = $preferred;
 		}
 		foreach ( $claims as $claim ) {
-			$vals[] = $wikibase->formatClaimAsWikitext( $parser, $claim );
+			if ( $rawValues ) {
+				$value = $this->getRawClaimValue( $claim );
+				if ( $value !== null ) {
+					$vals[] = $value;
+				}
+			} else {
+				$vals[] = $wikibase->formatClaimAsWikitext( $parser, $claim );
+			}
 		}
+
 		$out = $parser->getContentLanguage()->listToText( array_filter( $vals ) );
-		return Html::rawElement( 'span', [ 'class' => 'ext-UnlinkedWikibase-statements' ], $out );
+		$cssClass = $rawValues ? 'ext-UnlinkedWikibase-property' : 'ext-UnlinkedWikibase-statements';
+		return Html::rawElement( 'span', [ 'class' => $cssClass ], $out );
+	}
+
+	/**
+	 * Extract raw value from a claim without formatting (for #property).
+	 *
+	 * @param array $claim
+	 * @return string|null
+	 */
+	private function getRawClaimValue( array $claim ): ?string {
+		if ( !isset( $claim['mainsnak']['datavalue']['value'] ) ) {
+			return null;
+		}
+
+		$value = $claim['mainsnak']['datavalue']['value'];
+		$datatype = $claim['mainsnak']['datatype'] ?? '';
+
+		switch ( $datatype ) {
+			case 'wikibase-item':
+				return $value['id'] ?? null;
+
+			case 'monolingualtext':
+				return $value['text'] ?? null;
+
+			case 'quantity':
+				return isset( $value['amount'] ) ? ltrim( $value['amount'], '+' ) : null;
+
+			case 'time':
+				return $value['time'] ?? null;
+
+			case 'globe-coordinate':
+				if ( isset( $value['latitude'] ) && isset( $value['longitude'] ) ) {
+					return $value['latitude'] . ',' . $value['longitude'];
+				}
+				return null;
+
+			default:
+				return $value;
+		}
 	}
 
 	/**
