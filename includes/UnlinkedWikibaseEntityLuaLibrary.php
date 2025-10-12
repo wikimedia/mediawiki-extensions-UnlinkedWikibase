@@ -17,7 +17,11 @@ class UnlinkedWikibaseEntityLuaLibrary extends LibraryBase {
 	public function register(): array {
 		$lib = [];
 
-		$luaFile = dirname( __DIR__ ) . '/scribunto/UnlinkedWikibase.entity.lua';
+		$luaFile = dirname( __DIR__ ) . '/scribunto/' . $this->getLuaFileName();
 		return $this->getEngine()->registerInterface( $luaFile, $lib );
+	}
+
+	protected function getLuaFileName(): string {
+		return 'UnlinkedWikibase.entity.lua';
 	}
 }

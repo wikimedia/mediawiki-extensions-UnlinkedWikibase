@@ -55,8 +55,12 @@ class UnlinkedWikibaseLuaLibrary extends LibraryBase {
 			'getEntityStatements' => [ $this, 'getEntityStatements' ],
 			'resolvePropertyId' => [ $this, 'resolvePropertyId' ],
 		];
-		$luaFile = dirname( __DIR__ ) . '/scribunto/UnlinkedWikibase.lua';
+		$luaFile = dirname( __DIR__ ) . '/scribunto/' . $this->getLuaFileName();
 		return $this->getEngine()->registerInterface( $luaFile, $interfaceFuncs );
+	}
+
+	protected function getLuaFileName(): string {
+		return 'UnlinkedWikibase.lua';
 	}
 
 	/**

@@ -7,6 +7,7 @@
 namespace MediaWiki\Extension\UnlinkedWikibase;
 
 use MediaWiki\Config\Config;
+use MediaWiki\Extension\Scribunto\Hooks\ScribuntoExternalLibrariesHook;
 use MediaWiki\Hook\InfoActionHook;
 use MediaWiki\Hook\OutputPageParserOutputHook;
 use MediaWiki\Hook\ParserFirstCallInitHook;
@@ -22,7 +23,13 @@ use Wikimedia\Rdbms\LBFactory;
 /**
  * UnlinkedWikibase extension hooks.
  */
-class Hooks implements ParserFirstCallInitHook, InfoActionHook, SidebarBeforeOutputHook, OutputPageParserOutputHook {
+class Hooks implements
+	ParserFirstCallInitHook,
+	InfoActionHook,
+	SidebarBeforeOutputHook,
+	OutputPageParserOutputHook,
+	ScribuntoExternalLibrariesHook
+{
 
 	public const PAGE_PROP_ID = 'unlinkedwikibase_id';
 
@@ -42,15 +49,16 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook, SidebarBeforeOut
 		$this->connectionProvider = $connectionProvider;
 	}
 
-	/**
-	 * @link https://www.mediawiki.org/wiki/Extension:Scribunto/Hooks/ScribuntoExternalLibraries
-	 * @param string $engine
-	 * @param string[] &$libs
-	 */
-	public static function onScribuntoExternalLibraries( $engine, array &$libs ) {
+	/** @inheritDoc */
+	public function onScribuntoExternalLibraries( string $engine, array &$extraLibraries ) {
 		if ( $engine === 'lua' ) {
-			$libs['mw.ext.unlinkedwikibase'] = UnlinkedWikibaseLuaLibrary::class;
-			$libs['mw.ext.unlinkedwikibase.entity'] = UnlinkedWikibaseEntityLuaLibrary::class;
+			$extraLibraries['mw.ext.unlinkedwikibase'] = UnlinkedWikibaseLuaLibrary::class;
+			$extraLibraries['mw.ext.unlinkedwikibase.entity'] = UnlinkedWikibaseEntityLuaLibrary::class;
+			if ( $this->config->get( 'UnlinkedWikibaseImitationMode' ) ) {
+				// In imitation mode, also add the alias of 'mw.wikibase'.
+				$extraLibraries['mw.wikibase'] = UnlinkedWikibaseImitationLuaLibrary::class;
+				$extraLibraries['mw.wikibase.entity'] = UnlinkedWikibaseEntityImitationLuaLibrary::class;
+			}
 		}
 	}
 
