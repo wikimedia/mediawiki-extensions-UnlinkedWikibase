@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": [
+			"Toliño"
+		]
+	},
+	"unlinkedwikibase-error-label": "Erro de UnlinkedWikibase:",
+	"unlinkedwikibase-error-missing-id": "Cómpre indicar o parámetro «id».",
+	"unlinkedwikibase-error-invalid-id": "O identificador «$1» non ten o formato dun número enteiro co prefixo «Q».",
+	"unlinkedwikibase-infoaction-label": "Identificador de entidade de Wikibase"
+}
