@@ -1,0 +1,14 @@
+{
+	"@metadata": {
+		"authors": [
+			"Toliño"
+		]
+	},
+	"unlinkedwikibase-error-label": "Erro de UnlinkedWikibase:",
+	"unlinkedwikibase-error-missing-id": "Cómpre indicar o parámetro «id».",
+	"unlinkedwikibase-error-invalid-id": "O identificador «$1» non ten o formato dun número enteiro co prefixo «Q».",
+	"unlinkedwikibase-error-property-name-not-found": "Non se puido atopar a propiedade «$1».",
+	"unlinkedwikibase-sidebar-link": "Entidade de Wikibase",
+	"unlinkedwikibase-infoaction-label": "Identificador de entidade de Wikibase",
+	"unlinkedwikibase-infoaction-other-usage": "(empregado en $1 {{PLURAL:$1|páxina|páxinas}})"
+}
