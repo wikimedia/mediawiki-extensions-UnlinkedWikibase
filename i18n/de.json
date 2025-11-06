@@ -5,6 +5,8 @@
 	"unlinkedwikibase-desc": "Zugriff auf Wikibase-Objekt-Daten aus Wikis, die nicht mit einer Wikibase-Site verknüpft sind.",
 	"unlinkedwikibase-error-label": "UnlinkedWikibase-Fehler:",
 	"unlinkedwikibase-error-missing-id": "Der Parameter „id“ muss angegeben werden.",
+	"unlinkedwikibase-error-missing-property": "Ein Eigenschaftsparameter ist erforderlich.",
+	"unlinkedwikibase-error-statements-entity-not-set": "Für diese Seite ist keine Entität festgelegt. Verwende {{#unlinkedwikibase:id=Q...}} oder gib den Parameter |from=Q... an.",
 	"unlinkedwikibase-error-invalid-id": "Die ID „$1“ weist nicht das erforderliche Format einer Ganzzahl mit dem Präfix „Q“ auf.",
 	"unlinkedwikibase-error-property-name-not-found": "Die Eigenschaft „$1“ konnte nicht gefunden werden.",
 	"unlinkedwikibase-sidebar-link": "Wikibase-Objekt",

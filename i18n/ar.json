@@ -8,6 +8,8 @@
 	"unlinkedwikibase-desc": "يمكنك الوصول إلى بيانات كيان Wikibase من الويكيات غير المرتبطة بموقع Wikibase.",
 	"unlinkedwikibase-error-label": "خطأ في قاعدة بيانات ويكي غير المرتبطة:",
 	"unlinkedwikibase-error-missing-id": "يجب توفير المعلمة 'id'.",
+	"unlinkedwikibase-error-missing-property": "معلمة الخاصية مطلوبة.",
+	"unlinkedwikibase-error-statements-entity-not-set": "لم يتم تعيين أي كيان لهذه الصفحة. استخدم {{#unlinkedwikibase:id=Q...}} أو حدد المعلمة |from=Q...",
 	"unlinkedwikibase-error-invalid-id": "المعرف ' $1 ' ليس بالتنسيق المطلوب للعدد الصحيح الذي يسبقه 'Q'.",
 	"unlinkedwikibase-error-property-name-not-found": "لم يتم العثور على الخاصية ' $1 '.",
 	"unlinkedwikibase-sidebar-link": "كيان ويكيبيس",

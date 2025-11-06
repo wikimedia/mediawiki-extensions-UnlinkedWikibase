@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"EneshTranslates"
+		]
+	},
+	"unlinkedwikibase-error-missing-property": "Параметр свойства обязателен.",
+	"unlinkedwikibase-error-statements-entity-not-set": "Для этой страницы не задан объект. Используйте {{#unlinkedwikibase:id=Q...}} или укажите параметр |from=Q..."
+}

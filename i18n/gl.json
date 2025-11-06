@@ -7,6 +7,8 @@
 	"unlinkedwikibase-desc": "Acceder aos datos de entidades de Wikibase desde wikis que non están vinculados a un sitio de Wikibase.",
 	"unlinkedwikibase-error-label": "Erro de UnlinkedWikibase:",
 	"unlinkedwikibase-error-missing-id": "Cómpre indicar o parámetro «id».",
+	"unlinkedwikibase-error-missing-property": "O parámetro da propiedade é obrigatorio.",
+	"unlinkedwikibase-error-statements-entity-not-set": "Non hai ningunha entidade definida para esta páxina. Utiliza «{{#unlinkedwikibase:id=Q...}}» ou especifica o parámetro «|from=Q...».",
 	"unlinkedwikibase-error-invalid-id": "O identificador «$1» non ten o formato dun número enteiro co prefixo «Q».",
 	"unlinkedwikibase-error-property-name-not-found": "Non se puido atopar a propiedade «$1».",
 	"unlinkedwikibase-sidebar-link": "Entidade de Wikibase",
