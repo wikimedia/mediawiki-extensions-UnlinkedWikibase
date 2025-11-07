@@ -7,6 +7,8 @@
 	"unlinkedwikibase-desc": "Wikibase-entiteitsgegevens opvragen van wiki’s die niet aan een Wikibase-site zijn gekoppeld.",
 	"unlinkedwikibase-error-label": "UnlinkedWikibase-fout:",
 	"unlinkedwikibase-error-missing-id": "De parameter ‘id’ moet worden opgegeven.",
+	"unlinkedwikibase-error-missing-property": "De parameter voor de eigenschap is verplicht.",
+	"unlinkedwikibase-error-statements-entity-not-set": "Er is voor deze pagina geen entiteit ingesteld. Gebruik ‘{{#unlinkedwikibase:id=Q...}}’ of specificeer de parameter ‘|from=Q...’.",
 	"unlinkedwikibase-error-invalid-id": "ID ‘$1’ is niet in de vereiste notatie van een geheel getal voorafgegaan door ‘Q’.",
 	"unlinkedwikibase-error-property-name-not-found": "De eigenschap ‘$1’ kon niet worden gevonden.",
 	"unlinkedwikibase-sidebar-link": "Wikibase-entiteit",

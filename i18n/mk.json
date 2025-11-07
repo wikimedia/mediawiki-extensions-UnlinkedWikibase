@@ -7,6 +7,8 @@
 	"unlinkedwikibase-desc": "Пристап до податоци од единици на Викибазата од викија кои не се поврзани со мреж. место на Викибазата.",
 	"unlinkedwikibase-error-label": "Грешка во UnlinkedWikibase:",
 	"unlinkedwikibase-error-missing-id": "Мора да се укаже параметарот „id“.",
+	"unlinkedwikibase-error-missing-property": "Се бара параметар за својство.",
+	"unlinkedwikibase-error-statements-entity-not-set": "За оваа страница не е зададена единица. Послужете се со {{#unlinkedwikibase:id=Q...}} или укажете параметар |from=Q....",
 	"unlinkedwikibase-error-invalid-id": "Назнаката „$1“ не е во бараниот формат, кој треба да биде цел број, со претставка „Q“.",
 	"unlinkedwikibase-error-property-name-not-found": "Не најдов својство „$1“.",
 	"unlinkedwikibase-sidebar-link": "Единица на Викибазата",

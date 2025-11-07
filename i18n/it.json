@@ -4,6 +4,7 @@
 			"Beta16"
 		]
 	},
+	"unlinkedwikibase-error-missing-property": "Il parametro Proprietà è obbligatorio.",
 	"unlinkedwikibase-error-property-name-not-found": "La proprietà '$1' non è stata trovata.",
 	"unlinkedwikibase-sidebar-link": "Entità Wikibase",
 	"unlinkedwikibase-infoaction-label": "ID entità Wikibase",
