@@ -53,6 +53,7 @@ class UnlinkedWikibaseLuaLibrary extends LibraryBase {
 			'getEntityId' => [ $this, 'getEntityId' ],
 			'query' => [ $this, 'query' ],
 			'getEntityStatements' => [ $this, 'getEntityStatements' ],
+			'resolvePropertyId' => [ $this, 'resolvePropertyId' ],
 		];
 		$luaFile = dirname( __DIR__ ) . '/scribunto/UnlinkedWikibase.lua';
 		return $this->getEngine()->registerInterface( $luaFile, $interfaceFuncs );
@@ -72,6 +73,8 @@ class UnlinkedWikibaseLuaLibrary extends LibraryBase {
 		if ( $entity === null ) {
 			return [ 'error' => 'item-not-found' ];
 		}
+		// Add schemaVersion for entity object validation
+		$entity['schemaVersion'] = 2;
 		// Get the first value of the result (keyed by ID, which might be different to the ID requested).
 		return [ 'result' => $this->arrayConvertToOneIndex( $entity ) ];
 	}
@@ -293,5 +296,15 @@ class UnlinkedWikibaseLuaLibrary extends LibraryBase {
 		}
 
 		return $preferredStatements ?: $normalStatements;
+	}
+
+	/**
+	 * Resolve a property label or ID to a property ID.
+	 *
+	 * @param string $propertyLabelOrId Property label or ID (e.g., "instance of" or "P31")
+	 * @return array{0:string|null} Array containing the property ID or null if not found
+	 */
+	public function resolvePropertyId( string $propertyLabelOrId ): array {
+		return [ $this->wikibase->getPropertyId( $this->getParser(), $propertyLabelOrId ) ];
 	}
 }

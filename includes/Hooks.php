@@ -50,6 +50,7 @@ class Hooks implements ParserFirstCallInitHook, InfoActionHook, SidebarBeforeOut
 	public static function onScribuntoExternalLibraries( $engine, array &$libs ) {
 		if ( $engine === 'lua' ) {
 			$libs['mw.ext.unlinkedwikibase'] = UnlinkedWikibaseLuaLibrary::class;
+			$libs['mw.ext.unlinkedwikibase.entity'] = UnlinkedWikibaseEntityLuaLibrary::class;
 		}
 	}
 

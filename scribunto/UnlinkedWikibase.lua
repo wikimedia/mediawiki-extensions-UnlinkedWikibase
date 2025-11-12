@@ -22,11 +22,28 @@ function UnlinkedWikibase.setupInterface( options )
 end
 
 -- --
--- Get data from a Wikibase site.
+-- Get data from a Wikibase site and return it as an entity object.
+-- @param string id Wikibase entity ID, starting with 'Q'.
+-- @return table Entity object with methods, or nil if not found.
+-- --
+function UnlinkedWikibase.getEntity( id )
+	local data = php.getEntity( id )
+
+	if data.error then
+		return nil
+	end
+
+	local entityModule = require( 'mw.ext.UnlinkedWikibase.entity' )
+
+	return entityModule.create( data )
+end
+
+-- --
+-- Get raw entity data from a Wikibase site (without entity object wrapper).
 -- @param string id Wikibase entity ID, starting with 'Q'.
 -- @return table Whatever is returned by the Wikibase API.
 -- --
-function UnlinkedWikibase.getEntity( id )
+function UnlinkedWikibase.getEntityObject( id )
 	return php.getEntity( id );
 end
 
@@ -176,6 +193,15 @@ function UnlinkedWikibase.getAllStatements( entityId, propertyId )
 		return statements[propertyId]
 	end
 	return {}
+end
+
+-- Returns a property id for the given label or id
+--
+-- @param {string} propertyLabelOrId
+function UnlinkedWikibase.resolvePropertyId( propertyLabelOrId )
+	checkType( 'resolvePropertyId', 1, propertyLabelOrId, 'string' )
+
+	return php.resolvePropertyId( propertyLabelOrId )
 end
 
 return UnlinkedWikibase
