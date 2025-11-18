@@ -4,5 +4,6 @@
 			"Jeeputer"
 		]
 	},
+	"unlinkedwikibase-error-missing-property": "پارامتر ویژگی مورد نیاز است.",
 	"unlinkedwikibase-infoaction-other-usage": "(در $1 {{PLURAL:$1|صفحه}} استفاده شده است)"
 }
