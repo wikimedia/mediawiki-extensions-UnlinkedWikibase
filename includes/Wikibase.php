@@ -119,12 +119,7 @@ class Wikibase {
 	 */
 	public function getLabel( Parser $parser, string $id ): array {
 		$entity = $this->getEntity( $parser, $id );
-		if ( !$entity ) {
-			return [ null, null ];
-		}
-
-		$labels = $entity['labels'] ?? [];
-		if ( !$labels ) {
+		if ( !$entity || !isset( $entity['labels'] ) ) {
 			return [ null, null ];
 		}
 
@@ -132,6 +127,7 @@ class Wikibase {
 		$langs = array_unique( [
 			$targetLang,
 			...$this->langFallback->getAll( $targetLang ),
+			'mul',
 		] );
 		foreach ( $langs as $lang ) {
 			if ( isset( $entity['labels'][$lang]['value'] ) ) {
@@ -178,12 +174,7 @@ class Wikibase {
 	 */
 	public function getDescription( Parser $parser, string $id ): array {
 		$entity = $this->getEntity( $parser, $id );
-		if ( !$entity ) {
-			return [ null, null ];
-		}
-
-		$descriptions = $entity['descriptions'] ?? [];
-		if ( !$descriptions ) {
+		if ( !$entity || !isset( $entity['descriptions'] ) ) {
 			return [ null, null ];
 		}
 
@@ -191,6 +182,7 @@ class Wikibase {
 		$langs = array_unique( [
 			$targetLang,
 			...$this->langFallback->getAll( $targetLang ),
+			'mul',
 		] );
 		foreach ( $langs as $lang ) {
 			if ( isset( $entity['descriptions'][$lang]['value'] ) ) {
