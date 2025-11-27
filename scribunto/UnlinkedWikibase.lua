@@ -21,6 +21,25 @@ function UnlinkedWikibase.setupInterface( options )
 	package.loaded['mw.ext.UnlinkedWikibase'] = UnlinkedWikibase
 end
 
+-- Returns whether this a valid entity ID.
+-- This does not check whether the entity in question exists,
+-- it just checks that the entity id in question is valid.
+function UnlinkedWikibase.isValidEntityId( id )
+	return php.isValidEntityId( id )
+end
+
+-- Returns whether the entity in question exists.
+-- Redirected entities are reported as existing too.
+function UnlinkedWikibase.entityExists( id )
+	return php.entityExists( id )
+end
+
+-- Renders a serialized Snak value to wikitext escaped plain text.
+-- This is useful for displaying References or Qualifiers.
+function UnlinkedWikibase.renderSnak( snak )
+	return php.renderSnak( snak )
+end
+
 -- --
 -- Get data from a Wikibase site and return it as an entity object.
 -- @param string id Wikibase entity ID, starting with 'Q'.
@@ -29,7 +48,7 @@ end
 function UnlinkedWikibase.getEntity( id )
 	local data = php.getEntity( id )
 
-	if data.error then
+	if data == nil then
 		return nil
 	end
 

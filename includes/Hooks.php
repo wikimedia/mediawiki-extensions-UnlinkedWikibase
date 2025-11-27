@@ -150,7 +150,7 @@ class Hooks implements
 					$vals[] = $value;
 				}
 			} else {
-				$vals[] = $wikibase->formatClaimAsWikitext( $parser, $claim );
+				$vals[] = $wikibase->renderSnak( $parser, $claim['mainsnak'] );
 			}
 		}
 

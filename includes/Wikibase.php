@@ -350,54 +350,54 @@ class Wikibase {
 	 * https://www.wikidata.org/wiki/Wikidata:How_to_use_data_on_Wikimedia_projects#Parser_function
 	 * @return ?string
 	 */
-	public function formatClaimAsWikitext( Parser $parser, array $claim ): ?string {
+	public function renderSnak( Parser $parser, array $snak ): ?string {
 		// Commons image
-		if ( $claim['mainsnak']['datatype'] === 'commonsMedia' ) {
-			return '[[File:' . $claim['mainsnak']['datavalue']['value'] . '|thumb]]';
+		if ( $snak['datatype'] === 'commonsMedia' ) {
+			return '[[File:' . $snak['datavalue']['value'] . '|thumb]]';
 		}
 
 		// Coordinates
-		if ( $claim['mainsnak']['datatype'] === 'globe-coordinate' ) {
-			$lat = $claim['mainsnak']['datavalue']['value']['latitude'];
-			$lon = $claim['mainsnak']['datavalue']['value']['longitude'];
+		if ( $snak['datatype'] === 'globe-coordinate' ) {
+			$lat = $snak['datavalue']['value']['latitude'];
+			$lon = $snak['datavalue']['value']['longitude'];
 			// @todo Link to map.
 			return "📍 $lat, $lon";
 		}
 
 		// Monolingual text
-		if ( $claim['mainsnak']['datatype'] === 'monolingualtext' ) {
-			return $claim['mainsnak']['datavalue']['value']['text'];
+		if ( $snak['datatype'] === 'monolingualtext' ) {
+			return $snak['datavalue']['value']['text'];
 		}
 
 		// Date
-		if ( $claim['mainsnak']['datatype'] === 'time' ) {
-			$datetime = new DateTime( $claim['mainsnak']['datavalue']['value']['time'] );
+		if ( $snak['datatype'] === 'time' ) {
+			$datetime = new DateTime( $snak['datavalue']['value']['time'] );
 			// @todo Handle precision.
 			return $datetime->format( 'j M Y' );
 		}
 
 		// Link
-		if ( $claim['mainsnak']['datatype'] === 'url' ) {
-			return $claim['mainsnak']['datavalue']['value'];
+		if ( $snak['datatype'] === 'url' ) {
+			return $snak['datavalue']['value'];
 		}
 
 		// External ID
-		if ( $claim['mainsnak']['datatype'] === 'external-id' ) {
-			$propId = $claim['mainsnak']['property'];
+		if ( $snak['datatype'] === 'external-id' ) {
+			$propId = $snak['property'];
 			$propData = $this->getEntity( $parser, $propId );
 			$formatterUrlProp = $this->config->get( 'UnlinkedWikibaseFormatterUrlProp' );
 			if ( isset( $propData['claims'][$formatterUrlProp][0]['mainsnak']['datavalue']['value'] ) ) {
 				$urlFormat = $propData['claims'][$formatterUrlProp][0]['mainsnak']['datavalue']['value'];
-				$url = str_replace( '$1', $claim['mainsnak']['datavalue']['value'], $urlFormat );
-				return '[' . $url . ' ' . $claim['mainsnak']['datavalue']['value'] . ']';
+				$url = str_replace( '$1', $snak['datavalue']['value'], $urlFormat );
+				return '[' . $url . ' ' . $snak['datavalue']['value'] . ']';
 			} else {
-				return $claim['mainsnak']['datavalue']['value'];
+				return $snak['datavalue']['value'];
 			}
 		}
 
 		// Item
-		if ( $claim['mainsnak']['datatype'] === 'wikibase-item' ) {
-			$id = $claim['mainsnak']['datavalue']['value']['id'];
+		if ( $snak['datatype'] === 'wikibase-item' ) {
+			$id = $snak['datavalue']['value']['id'];
 			$entity = $this->getEntity( $parser, $id );
 			return $entity['labels'][$this->contentLang->getCode()]['value']
 				?? $entity['labels']['en']['value']
@@ -405,9 +405,9 @@ class Wikibase {
 		}
 
 		// Quantity
-		if ( $claim['mainsnak']['datatype'] === 'quantity' ) {
+		if ( $snak['datatype'] === 'quantity' ) {
 			$unitId = substr(
-				$claim['mainsnak']['datavalue']['value']['unit'],
+				$snak['datavalue']['value']['unit'],
 				strlen( 'http://www.wikidata.org/entity/' )
 			);
 			$unit = $this->getEntity( $parser, $unitId );
@@ -417,7 +417,7 @@ class Wikibase {
 					?? $unit['labels']['en']['value']
 					?? '';
 			}
-			$amount = (float)$claim['mainsnak']['datavalue']['value']['amount'];
+			$amount = (float)$snak['datavalue']['value']['amount'];
 			return trim( $amount . ' ' . $unitLabel );
 		}
 

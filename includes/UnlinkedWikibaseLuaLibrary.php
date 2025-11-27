@@ -7,6 +7,7 @@ use MediaWiki\Extension\Scribunto\Engines\LuaCommon\LibraryBase;
 use MediaWiki\Extension\Scribunto\Engines\LuaCommon\LuaEngine;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Title\Title;
+use MediaWiki\WikiMap\WikiMap;
 use Wikimedia\ObjectCache\WANObjectCache;
 
 class UnlinkedWikibaseLuaLibrary extends LibraryBase {
@@ -42,6 +43,8 @@ class UnlinkedWikibaseLuaLibrary extends LibraryBase {
 	 */
 	public function register(): array {
 		$interfaceFuncs = [
+			'isValidEntityId' => [ $this, 'isValidEntityId' ],
+			'entityExists' => [ $this, 'entityExists' ],
 			'getEntity' => [ $this, 'getEntity' ],
 			'getLabel' => [ $this, 'getLabel' ],
 			'getLabelByLanguage' => [ $this, 'getLabelByLanguage' ],
@@ -54,6 +57,8 @@ class UnlinkedWikibaseLuaLibrary extends LibraryBase {
 			'query' => [ $this, 'query' ],
 			'getEntityStatements' => [ $this, 'getEntityStatements' ],
 			'resolvePropertyId' => [ $this, 'resolvePropertyId' ],
+			'getCurrentWikiId' => [ $this, 'getCurrentWikiId' ],
+			'renderSnak' => [ $this, 'renderSnak' ],
 		];
 		$luaFile = dirname( __DIR__ ) . '/scribunto/' . $this->getLuaFileName();
 		return $this->getEngine()->registerInterface( $luaFile, $interfaceFuncs );
@@ -64,23 +69,45 @@ class UnlinkedWikibaseLuaLibrary extends LibraryBase {
 	}
 
 	/**
-	 * Get data for a given entity.
-	 *
+	 * @param string $entityIdSerialization
+	 * @return array{0:bool}
+	 */
+	public function isValidEntityId( string $entityIdSerialization ): array {
+		$pattern = '/^Q[1-9]\d{0,9}\z/i';
+		return [ preg_match( $pattern, $entityIdSerialization ) === 1 ];
+	}
+
+	/**
+	 * @param string $id
+	 * @return array{0:bool}
+	 */
+	public function entityExists( string $id ): array {
+		return [ array_key_exists( 'result', $this->getEntity( $id ) ) ];
+	}
+
+	/**
+	 * @return array{0:?string}
+	 */
+	public function renderSnak( array $snak ): array {
+		return [ $this->wikibase->renderSnak( $this->getParser(), $snak ) ];
+	}
+
+	/**
 	 * @param string $id A Wikibase item ID.
-	 * @return mixed[] A result array with 'result' or 'error' key.
+	 * @return array{0:?mixed}
 	 */
 	public function getEntity( $id ): array {
 		if ( !preg_match( '/[QPL][0-9]+/', $id ) ) {
-			return [ 'error' => 'invalid-item-id' ];
+			return [ null ];
 		}
 		$entity = $this->wikibase->getEntity( $this->getParser(), $id );
 		if ( $entity === null ) {
-			return [ 'error' => 'item-not-found' ];
+			return [ null ];
 		}
 		// Add schemaVersion for entity object validation
 		$entity['schemaVersion'] = 2;
 		// Get the first value of the result (keyed by ID, which might be different to the ID requested).
-		return [ 'result' => $this->arrayConvertToOneIndex( $entity ) ];
+		return [ $this->arrayConvertToOneIndex( $entity ) ];
 	}
 
 	/**
@@ -117,6 +144,13 @@ class UnlinkedWikibaseLuaLibrary extends LibraryBase {
 	 */
 	public function getDescriptionByLanguage( string $id, string $languageCode ) {
 		return [ $this->wikibase->getDescriptionByLanguage( $this->getParser(), $id, $languageCode ) ];
+	}
+
+	/**
+	 * @return array{0:string}
+	 */
+	public function getCurrentWikiId(): array {
+		return [ WikiMap::getCurrentWikiId() ];
 	}
 
 	/**
