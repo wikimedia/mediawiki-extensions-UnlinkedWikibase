@@ -1,0 +1,19 @@
+{
+	"@metadata": {
+		"authors": [
+			"Kly"
+		]
+	},
+	"unlinkedwikibase-desc": "從未連結到 Wikibase 網站的 wiki 中存取 Wikibase 實體資料。",
+	"unlinkedwikibase-error-label": "UnlinkedWikibase 錯誤：",
+	"unlinkedwikibase-error-missing-id": "必須提供 'id' 參數。",
+	"unlinkedwikibase-error-missing-property": "需要屬性參數。",
+	"unlinkedwikibase-error-statements-entity-not-set": "此頁面未設定實體。請使用 {{#unlinkedwikibase:id=Q...}} 或指定 |from=Q... 參數。",
+	"unlinkedwikibase-error-invalid-id": "ID '$1' 的所需格式是要以 'Q' 為前綴的整數。",
+	"unlinkedwikibase-error-property-name-not-found": "找不到屬性 '$1'。",
+	"unlinkedwikibase-sidebar-link": "Wikibase 實體",
+	"unlinkedwikibase-infoaction-label": "Wikibase 實體 ID",
+	"unlinkedwikibase-infoaction-other-usage": "（用於 $1 個{{PLURAL:$1|頁面}}）",
+	"unlinkedwikibase-special-jobqueue-size": "UnlinkedWikibase 作業佇列大小：$1",
+	"unlinkedwikibase-special-no-jobs": "未配置[[mw:Object cache#WAN_cache|網站快取]]使用為作業佇列索取資料，因此使用 UnlinkedWikibase 頁面的載入速度可能較慢。"
+}
