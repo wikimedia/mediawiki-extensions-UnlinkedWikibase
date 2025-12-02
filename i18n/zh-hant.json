@@ -1,0 +1,14 @@
+{
+	"@metadata": {
+		"authors": [
+			"Kly"
+		]
+	},
+	"unlinkedwikibase-error-label": "UnlinkedWikibase 錯誤：",
+	"unlinkedwikibase-error-missing-id": "必須提供 'id' 參數。",
+	"unlinkedwikibase-error-invalid-id": "ID '$1' 的所需格式是要以 'Q' 為前綴的整數。",
+	"unlinkedwikibase-error-property-name-not-found": "找不到屬性 '$1'。",
+	"unlinkedwikibase-sidebar-link": "Wikibase 實體",
+	"unlinkedwikibase-infoaction-label": "Wikibase 實體 ID",
+	"unlinkedwikibase-infoaction-other-usage": "（用於 $1 個{{PLURAL:$1|頁面}}）"
+}
