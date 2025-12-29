@@ -1,12 +1,20 @@
 {
 	"@metadata": {
 		"authors": [
-			"Beta16"
+			"Beta16",
+			"GseSro"
 		]
 	},
+	"unlinkedwikibase-desc": "Accedi ai dati delle entità Wikibase da wiki che non sono collegate a un sito Wikibase.",
+	"unlinkedwikibase-error-label": "Errore Wikibase non collegata:",
+	"unlinkedwikibase-error-missing-id": "Il parametro 'id' deve essere fornito.",
 	"unlinkedwikibase-error-missing-property": "Il parametro Proprietà è obbligatorio.",
+	"unlinkedwikibase-error-statements-entity-not-set": "Nessuna entità è impostata per questa pagina. Usa {{#unlinkedwikibase:id=Q...}} o specifica il parametro |from=Q....",
+	"unlinkedwikibase-error-invalid-id": "L'ID '$1' non è nel formato richiesto di un intero con prefisso 'Q'.",
 	"unlinkedwikibase-error-property-name-not-found": "La proprietà '$1' non è stata trovata.",
 	"unlinkedwikibase-sidebar-link": "Entità Wikibase",
 	"unlinkedwikibase-infoaction-label": "ID entità Wikibase",
-	"unlinkedwikibase-infoaction-other-usage": "(usato in $1 {{PLURAL:$1|pagina|pagine}})"
+	"unlinkedwikibase-infoaction-other-usage": "(usato in $1 {{PLURAL:$1|pagina|pagine}})",
+	"unlinkedwikibase-special-jobqueue-size": "UnlinkedWikibase job queue size: $1",
+	"unlinkedwikibase-special-no-jobs": "La site cache [[mw:Object cache#WAN_cache|site cache]] non è configurata per l'uso della coda di lavoro per recuperare dati, quindi le pagine che usano UnlinkedWikibase potrebbero caricarsi lentamente."
 }
