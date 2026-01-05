@@ -1,8 +1,12 @@
 {
 	"@metadata": {
 		"authors": [
-			"Beta16"
+			"Beta16",
+			"GseSro"
 		]
 	},
+	"unlinkedwikibase-error-label": "Errore Wikibase non collegata:",
+	"unlinkedwikibase-error-missing-id": "Il parametro 'id' deve essere fornito.",
+	"unlinkedwikibase-error-invalid-id": "L'ID '$1' non è nel formato richiesto di un intero con prefisso 'Q'.",
 	"unlinkedwikibase-infoaction-label": "ID entità Wikibase"
 }
