@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Woytecr"
+		]
+	},
+	"unlinkedwikibase-desc": "Uzyskuje dostęp do danych encji Wikibase z wiki, które nie są połączone z serwisami Wikibase.",
+	"unlinkedwikibase-error-missing-id": "Należy podać parametr 'id'.",
+	"unlinkedwikibase-error-missing-property": "Parametr z właściwością jest wymagany."
+}
