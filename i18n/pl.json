@@ -1,0 +1,17 @@
+{
+	"@metadata": {
+		"authors": [
+			"Woytecr"
+		]
+	},
+	"unlinkedwikibase-desc": "Uzyskuje dostęp do danych encji Wikibase z wiki, które nie są połączone z serwisami Wikibase.",
+	"unlinkedwikibase-error-label": "Błąd UnlinkedWikibase:",
+	"unlinkedwikibase-error-missing-id": "Należy podać parametr 'id'.",
+	"unlinkedwikibase-error-invalid-id": "Identyfikator '$1' nie jest w wymaganym formacie liczby całkowitej z prefiksem 'Q'.",
+	"unlinkedwikibase-error-property-name-not-found": "Nie udało się znaleźć właściwości '$1'.",
+	"unlinkedwikibase-sidebar-link": "Element w Wikibase",
+	"unlinkedwikibase-infoaction-label": "Identyfikator obiektu w Wikibase",
+	"unlinkedwikibase-infoaction-other-usage": "(używany na $1 {{PLURAL:$1|stronie|stronach}})",
+	"unlinkedwikibase-special-jobqueue-size": "Rozmiar kolejki zadań UnlinkedWikibase: $1",
+	"unlinkedwikibase-special-no-jobs": "[[mw:Object cache#WAN_cache|Pamięć podręczna witryny]] nie jest skonfigurowana do korzystania z kolejki zadań w celu pobierania danych, więc strony korzystające z UnlinkedWikibase mogą ładować się powoli."
+}
