@@ -23,7 +23,7 @@ class Wikibase {
 	/** @var HttpRequestFactory */
 	private $requestFactory;
 
-	/** @var WANObjectCache */
+	/** @var WANObjectCache|BagOStuff */
 	private $cache;
 
 	/** @var Language */
