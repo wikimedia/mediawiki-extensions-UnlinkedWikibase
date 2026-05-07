@@ -1,8 +1,16 @@
 {
 	"@metadata": {
 		"authors": [
+			"Tensama0415",
 			"Ykhwong"
 		]
 	},
-	"unlinkedwikibase-error-label": "UnlinkedWikibase 오류:"
+	"unlinkedwikibase-error-label": "UnlinkedWikibase 오류:",
+	"unlinkedwikibase-error-missing-id": "'id' 매개변수는 제공되어야 합니다.",
+	"unlinkedwikibase-error-missing-property": "속성 매개변수는 필수입니다.",
+	"unlinkedwikibase-error-property-name-not-found": "'$1' 속성을 찾을 수 없습니다.",
+	"unlinkedwikibase-sidebar-link": "위키베이스 개체",
+	"unlinkedwikibase-infoaction-label": "위키베이스 개체 ID",
+	"unlinkedwikibase-infoaction-other-usage": "({{PLURAL:$1|문서}} $1개에서 사용됨)",
+	"unlinkedwikibase-special-jobqueue-size": "UnlinkedWikibase 작업 큐 크기: $1"
 }
