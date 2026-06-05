@@ -4,7 +4,6 @@ namespace MediaWiki\Extension\UnlinkedWikibase\Test;
 
 use MediaWikiIntegrationTestCase;
 use MockHttpTrait;
-use Wikimedia\Rdbms\IDatabase;
 
 /**
  * @covers MediaWiki\Extension\UnlinkedWikibase\Hooks
@@ -37,17 +36,15 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( 3, $page1->getValue()['revision-record']->getId() );
 		$page2 = $this->editPage( 'Query page 2', '{{#invoke:test|main|Q123}}' );
 		$this->assertSame( 4, $page2->getValue()['revision-record']->getId() );
-		$this->assertSelect(
-			'page_props',
-			[ 'pp_page', 'pp_propname', 'pp_value' ],
-			IDatabase::ALL_ROWS,
-			[
+		$this->newSelectQueryBuilder()
+			->select( [ 'pp_page', 'pp_propname', 'pp_value' ] )
+			->from( 'page_props' )
+			->assertResultSet( [
 				[ '2', 'unlinkedwikibase_id', 'Q123' ],
 				[ '3', 'unlinkedwikibase_entities_used_1', 'Q123' ],
 				[ '3', 'unlinkedwikibase_entities_used_2', 'Q456' ],
 				[ '4', 'unlinkedwikibase_entities_used_1', 'Q123' ],
-			]
-		);
+			] );
 	}
 
 }
