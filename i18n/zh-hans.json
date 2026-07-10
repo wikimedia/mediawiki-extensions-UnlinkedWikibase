@@ -1,0 +1,19 @@
+{
+	"@metadata": {
+		"authors": [
+			"简纸Paper"
+		]
+	},
+	"unlinkedwikibase-desc": "从未链接到维基库网站的维基中访问维基库实体数据。",
+	"unlinkedwikibase-error-label": "UnlinkedWikibase错误：",
+	"unlinkedwikibase-error-missing-id": "必须提供“id”参数。",
+	"unlinkedwikibase-error-missing-property": "需要属性参数。",
+	"unlinkedwikibase-error-statements-entity-not-set": "此页面未设置实体。请使用{{#unlinkedwikibase:id=Q...}}或指定|from=Q...参数。",
+	"unlinkedwikibase-error-invalid-id": "ID“$1”的格式必须是以“Q”为前缀的整数。",
+	"unlinkedwikibase-error-property-name-not-found": "找不到属性“$1”。",
+	"unlinkedwikibase-sidebar-link": "维基库实体",
+	"unlinkedwikibase-infoaction-label": "维基库实体ID",
+	"unlinkedwikibase-infoaction-other-usage": "（用于$1个{{PLURAL:$1|页面}}）",
+	"unlinkedwikibase-special-jobqueue-size": "UnlinkedWikibase作业队列大小：$1",
+	"unlinkedwikibase-special-no-jobs": "未配置[[mw:Object cache#WAN_cache|网站缓存]]使用为作业队列获取数据，因此使用UnlinkedWikibase页面的加载速度可能较慢。"
+}
