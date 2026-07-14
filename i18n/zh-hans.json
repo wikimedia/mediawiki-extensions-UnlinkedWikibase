@@ -1,0 +1,14 @@
+{
+	"@metadata": {
+		"authors": [
+			"简纸Paper"
+		]
+	},
+	"unlinkedwikibase-error-label": "UnlinkedWikibase错误：",
+	"unlinkedwikibase-error-missing-id": "必须提供“id”参数。",
+	"unlinkedwikibase-error-invalid-id": "ID“$1”的格式必须是以“Q”为前缀的整数。",
+	"unlinkedwikibase-error-property-name-not-found": "找不到属性“$1”。",
+	"unlinkedwikibase-sidebar-link": "维基库实体",
+	"unlinkedwikibase-infoaction-label": "维基库实体ID",
+	"unlinkedwikibase-infoaction-other-usage": "（用于$1个{{PLURAL:$1|页面}}）"
+}
