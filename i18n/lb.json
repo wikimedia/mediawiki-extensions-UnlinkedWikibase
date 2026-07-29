@@ -1,8 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Robby"
+			"Robby",
+			"Volvox"
 		]
 	},
+	"unlinkedwikibase-error-property-name-not-found": "D'Eegenschaft „$1“ gouf net fonnt.",
 	"unlinkedwikibase-infoaction-other-usage": "(op {{PLURAL:$1|enger Säit|$1 Säite}} benotzt)"
 }
