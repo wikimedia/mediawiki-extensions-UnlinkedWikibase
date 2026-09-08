@@ -6,5 +6,7 @@
 		]
 	},
 	"unlinkedwikibase-error-property-name-not-found": "D'Eegenschaft „$1“ gouf net fonnt.",
+	"unlinkedwikibase-sidebar-link": "Wikibase-Objet",
+	"unlinkedwikibase-infoaction-label": "Wikibase-Objet-ID",
 	"unlinkedwikibase-infoaction-other-usage": "(op {{PLURAL:$1|enger Säit|$1 Säite}} benotzt)"
 }
