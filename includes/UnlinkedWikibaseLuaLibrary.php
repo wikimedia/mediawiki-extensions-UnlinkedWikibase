@@ -12,18 +12,10 @@ use Wikimedia\ObjectCache\WANObjectCache;
 
 class UnlinkedWikibaseLuaLibrary extends LibraryBase {
 
-	/** @var Config */
-	private $config;
+	private readonly Config $config;
+	private readonly WANObjectCache $cache;
+	private readonly Wikibase $wikibase;
 
-	/** @var WANObjectCache */
-	private $cache;
-
-	/** @var Wikibase */
-	private $wikibase;
-
-	/**
-	 * @param LuaEngine $engine
-	 */
 	public function __construct( LuaEngine $engine ) {
 		parent::__construct( $engine );
 		$services = MediaWikiServices::getInstance();

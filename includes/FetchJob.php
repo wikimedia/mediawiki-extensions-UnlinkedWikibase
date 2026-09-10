@@ -12,16 +12,13 @@ class FetchJob extends Job {
 
 	public const JOB_NAME = 'UnlinkedWikibaseFetch';
 
-	/** @var WANObjectCache */
-	private $cache;
-
-	/** @var Config */
-	private $config;
-
-	public function __construct( Title $title, array $params, WANObjectCache $cache, Config $config ) {
+	public function __construct(
+		Title $title,
+		array $params,
+		private readonly WANObjectCache $cache,
+		private readonly Config $config,
+	) {
 		parent::__construct( self::JOB_NAME, $params );
-		$this->cache = $cache;
-		$this->config = $config;
 	}
 
 	/**

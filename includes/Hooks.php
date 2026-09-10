@@ -40,13 +40,10 @@ class Hooks implements
 	private const TRUEVALS = [ 'true', 't', 'yes', 'y', 'on', '1' ];
 	private const FALSEVALS = [ 'false', 'f', 'no', 'n', 'off', '0' ];
 
-	private Config $config;
-
-	private LBFactory $connectionProvider;
-
-	public function __construct( Config $mainConfig, LBFactory $connectionProvider ) {
-		$this->config = $mainConfig;
-		$this->connectionProvider = $connectionProvider;
+	public function __construct(
+		private readonly Config $config,
+		private readonly LBFactory $connectionProvider,
+	) {
 	}
 
 	/** @inheritDoc */

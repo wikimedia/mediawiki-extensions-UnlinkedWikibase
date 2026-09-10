@@ -17,29 +17,19 @@ use Wikimedia\ObjectCache\WANObjectCache;
 
 class Wikibase {
 
-	/** @var Config */
-	private $config;
-
-	/** @var HttpRequestFactory */
-	private $requestFactory;
-
-	/** @var WANObjectCache|BagOStuff */
-	private $cache;
-
-	/** @var Language */
-	private $contentLang;
-
-	/** @var LanguageFallback */
-	private $langFallback;
+	private readonly Config $config;
+	private readonly HttpRequestFactory $requestFactory;
+	private readonly WANObjectCache|BagOStuff $cache;
+	private readonly Language $contentLang;
+	private readonly LanguageFallback $langFallback;
 
 	/** @var string[] */
-	private $entityIds = [];
+	private array $entityIds = [];
 
 	/** @var string[] */
 	private $propIds;
 
-	/** @var JobQueueGroup */
-	private JobQueueGroup $jobQueueGroup;
+	private readonly JobQueueGroup $jobQueueGroup;
 
 	public function __construct() {
 		$services = MediaWikiServices::getInstance();
