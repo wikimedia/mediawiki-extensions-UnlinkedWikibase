@@ -15,8 +15,9 @@ use MediaWiki\Hook\SidebarBeforeOutputHook;
 use MediaWiki\Html\Html;
 use MediaWiki\Language\Language;
 use MediaWiki\Language\LanguageCode;
+use MediaWiki\Languages\LanguageNameUtils;
 use MediaWiki\MainConfigNames;
-use MediaWiki\MediaWikiServices;
+use MediaWiki\Page\PageProps;
 use MediaWiki\Parser\Parser;
 use Wikimedia\Rdbms\LBFactory;
 
@@ -43,6 +44,8 @@ class Hooks implements
 	public function __construct(
 		private readonly Config $config,
 		private readonly LBFactory $connectionProvider,
+		private readonly LanguageNameUtils $languageNameUtils,
+		private readonly PageProps $pageProps,
 	) {
 	}
 
@@ -268,7 +271,6 @@ class Hooks implements
 		$suffix = $this->config->get( 'UnlinkedWikibaseSitelinkSuffix' );
 		$skip = $this->config->get( 'UnlinkedWikibaseSitelinkSkippedLangs' );
 		$map = $this->config->get( MainConfigNames::InterlanguageLinkCodeMap );
-		$langNameUtils = MediaWikiServices::getInstance()->getLanguageNameUtils();
 		foreach ( $entity['sitelinks'] as $wiki => $sitelink ) {
 			if (
 				strlen( $wiki ) <= strlen( $suffix ) ||
@@ -285,7 +287,7 @@ class Hooks implements
 			$class = "interlanguage-link interwiki-$originalLangCode";
 
 			$langCode = $map[$originalLangCode] ?? $originalLangCode;
-			$langName = $langNameUtils->getLanguageName( $langCode );
+			$langName = $this->languageNameUtils->getLanguageName( $langCode );
 			if ( strval( $langName ) === '' ) {
 				$msg = wfMessage( "interlanguage-link-$langCode" );
 				if ( $msg->isDisabled() ) {
@@ -301,7 +303,7 @@ class Hooks implements
 			// Core would use user language, but we use parse language due to
 			// where this processing happens with regards to caching.
 			// This is only used in the tooltip anyways.
-			$langLocalName = $langNameUtils->getLanguageName( $langCode, $lang->getCode() );
+			$langLocalName = $this->languageNameUtils->getLanguageName( $langCode, $lang->getCode() );
 			if ( $langLocalName === '' ) {
 				$friendlyName = wfMessage( "interlanguage-link-sitename-$langCode" );
 				if ( $friendlyName->isDisabled() ) {
@@ -352,8 +354,7 @@ class Hooks implements
 	 */
 	public function onInfoAction( $context, &$pageInfo ) {
 		// Get this page's Wikibase ID.
-		$props = MediaWikiServices::getInstance()
-			->getPageProps()
+		$props = $this->pageProps
 			->getProperties( $context->getTitle(), self::PAGE_PROP_ID );
 		if ( !$props ) {
 			return true;
@@ -406,8 +407,7 @@ class Hooks implements
 			$sidebar['LANGUAGES'] = array_merge( $sidebar['LANGUAGES'], $langLinks );
 		}
 
-		$props = MediaWikiServices::getInstance()
-			->getPageProps()
+		$props = $this->pageProps
 			->getProperties( $skin->getTitle(), self::PAGE_PROP_ID );
 		if ( $props ) {
 			$entityId = array_shift( $props );

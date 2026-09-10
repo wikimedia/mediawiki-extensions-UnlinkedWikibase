@@ -37,7 +37,8 @@
 			"services": [
 				"MainConfig",
 				"DBLoadBalancerFactory",
-				"JobQueueGroupFactory"
+				"LanguageNameUtils",
+				"PageProps"
 			]
 		}
 	},
