@@ -1,0 +1,17 @@
+{
+	"@metadata": {
+		"authors": [
+			"AhmedG612"
+		]
+	},
+	"unlinkedwikibase-desc": "Ka hel xogta qaybaha Wikibase wikis aan ku xirnayn degel Wikibase ah.",
+	"unlinkedwikibase-error-label": "Khaladka Wikibase aan ku xirnayn:",
+	"unlinkedwikibase-error-missing-id": "Xuduudda 'id' waa in la bixiyo.",
+	"unlinkedwikibase-error-invalid-id": "Aqoonsiga '$1' kuma jiro qaabka loo baahan yahay ee tiro dhan oo ay ka horreyso 'Q'.",
+	"unlinkedwikibase-error-property-name-not-found": "Hantida '$1' lama heli karin.",
+	"unlinkedwikibase-sidebar-link": "Qaybta Wikibase",
+	"unlinkedwikibase-infoaction-label": "Aqoonsiga qaybta Wikibase",
+	"unlinkedwikibase-infoaction-other-usage": "(loo adeegsaday $1 {{PLURAL:$1|bog|bogag}})",
+	"unlinkedwikibase-special-jobqueue-size": "Cabbirka safka hawlaha Wikibase aan ku xirnayn: $1",
+	"unlinkedwikibase-special-no-jobs": "[[mw:Object cache#WAN_cache|Kaydka degelka]] looma habayn in safka hawlaha loo isticmaalo soo-helidda xogta, sidaas darteed bogagga isticmaalaya Wikibase aan ku xirnayn waxay si gaabis ah u soo geli karaan."
+}
