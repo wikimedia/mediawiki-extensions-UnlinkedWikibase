@@ -1,0 +1,14 @@
+{
+	"@metadata": {
+		"authors": [
+			"AhmedG612"
+		]
+	},
+	"unlinkedwikibase-error-label": "Khaladka Wikibase aan ku xirnayn:",
+	"unlinkedwikibase-error-missing-id": "Xuduudda 'id' waa in la bixiyo.",
+	"unlinkedwikibase-error-invalid-id": "Aqoonsiga '$1' kuma jiro qaabka loo baahan yahay ee tiro dhan oo ay ka horreyso 'Q'.",
+	"unlinkedwikibase-error-property-name-not-found": "Hantida '$1' lama heli karin.",
+	"unlinkedwikibase-sidebar-link": "Qaybta Wikibase",
+	"unlinkedwikibase-infoaction-label": "Aqoonsiga qaybta Wikibase",
+	"unlinkedwikibase-infoaction-other-usage": "(loo adeegsaday $1 {{PLURAL:$1|bog|bogag}})"
+}
