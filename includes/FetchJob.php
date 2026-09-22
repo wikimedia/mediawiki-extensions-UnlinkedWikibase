@@ -25,14 +25,15 @@ class FetchJob extends Job {
 	public function run() {
 		$url = $this->getParams()['url'];
 		$cache = $this->wikibase->getCache();
-		$cacheKey = $cache->makeKey( 'ext-UnlinkedWikibase', $url );
+
+		// These cache keys match what's used in `Wikibase::fetch()`.
+		$cacheKey = $this->wikibase->makeCacheKey( $url );
+		$cacheRefreshedKey = $this->wikibase->makeCacheKey( $url, 'refreshed' );
 
 		$data = $cache->get( $cacheKey );
-		if ( $data ) {
-			return true;
-		}
+		$dataRefreshed = $cache->get( $cacheRefreshedKey );
 
-		$ttl = $this->getParams()['ttl'];
+		$ttl = $this->getParams()['ttl'] ?? null;
 		if ( !$ttl ) {
 			$ttl = $this->config->get( 'UnlinkedWikibaseEntityTTL' );
 		}
@@ -40,8 +41,21 @@ class FetchJob extends Job {
 			$ttl = $cache::TTL_INDEFINITE;
 		}
 
-		$data = $this->wikibase->fetchWithoutCache( $url );
-		$cache->set( $cacheKey, $data, $ttl, [ 'staleTTL' => $cache::TTL_WEEK ] );
+		// If refreshed recently, do nothing.
+		if ( $data !== false && $dataRefreshed !== false && (int)$dataRefreshed >= (int)wfTimestamp() - $ttl ) {
+			return true;
+		}
+
+		$newData = $this->wikibase->fetchWithoutCache( $url );
+
+		// On failure, leave the existing (possibly stale) data and timestamp untouched,
+		// so Wikibase::fetch() keeps using it (another job will be queued when its next accessed).
+		if ( $newData === [] ) {
+			return true;
+		}
+
+		$cache->set( $cacheKey, $newData );
+		$cache->set( $cacheRefreshedKey, wfTimestamp() );
 
 		return true;
 	}

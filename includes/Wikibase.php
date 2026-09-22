@@ -3,10 +3,10 @@
 namespace MediaWiki\Extension\UnlinkedWikibase;
 
 use DateTime;
-use JobQueueGroup;
-use JobSpecification;
 use MediaWiki\Config\Config;
 use MediaWiki\Http\HttpRequestFactory;
+use MediaWiki\JobQueue\JobQueueGroup;
+use MediaWiki\JobQueue\JobSpecification;
 use MediaWiki\Language\Language;
 use MediaWiki\Languages\LanguageFallback;
 use MediaWiki\Parser\Parser;
@@ -279,28 +279,45 @@ class Wikibase {
 	}
 
 	/**
+	 * @param string|int ...$components Additional, ordered, key components for entity IDs
+	 *
+	 * @return string
+	 */
+	public function makeCacheKey( ...$components ): string {
+		return $this->cache->makeKey( 'ext-UnlinkedWikibase', ...$components );
+	}
+
+	/**
 	 * Fetch data from a JSON URL.
+	 * @param string $url The URL to fetch.
+	 * @param int $ttl Cache TTL in seconds, one of the ExpirationAwareness::TTL_* constants.
 	 */
 	public function fetch( string $url, int $ttl ): array {
-		$wb = $this;
-		$jobQueueGroup = $this->jobQueueGroup;
-		return $this->cache->getWithSetCallback(
-			$this->cache->makeKey( 'ext-UnlinkedWikibase', $url ),
-			$ttl,
-			static function ( $oldValue, &$ttl, array &$setOpts, $oldAsOf ) use ( $wb, $jobQueueGroup, $url ) {
-				// If the cache doesn't support having the fetch happen in the job queue, fetch the data immediately.
-				if ( !$wb->canCache() ) {
-					return $wb->fetchWithoutCache( $url );
-				}
-				// If it's not cached, create a job that will cache it.
-				$job = new JobSpecification( FetchJob::JOB_NAME, [ 'url' => $url, 'ttl' => $ttl ] );
-				$jobQueueGroup->lazyPush( $job );
-				// Return the old value if possible.
-				return $oldValue ?: [];
-			},
-			// staleTTL also defined in FetchJob.
-			[ 'staleTTL' => $this->cache::TTL_WEEK ]
-		);
+		// Get cache info.
+		$cacheKey = $this->makeCacheKey( $url );
+		$cacheRefreshedKey = $this->makeCacheKey( $url, 'refreshed' );
+		$data = $this->cache->get( $cacheKey );
+		$dataRefreshed = $this->cache->get( $cacheRefreshedKey );
+
+		// If the cache doesn't support having the fetch happen in the job queue, fetch the data immediately.
+		if ( !$this->canCache() ) {
+			$data = $this->fetchWithoutCache( $url );
+			// It may still be able to be cached for the current session, to avoid duplicate fetches.
+			$this->cache->set( $cacheKey, $data, $this->cache::TTL_INDEFINITE );
+			$this->cache->set( $cacheRefreshedKey, wfTimestamp(), $this->cache::TTL_INDEFINITE );
+		}
+
+		// If the data has never been cached, or hasn't been refreshed within the TTL, queue a refresh.
+		if ( $data === false || ( $dataRefreshed !== false && (int)$dataRefreshed < (int)wfTimestamp() - $ttl ) ) {
+			$job = new JobSpecification(
+				FetchJob::JOB_NAME,
+				[ 'url' => $url, 'ttl' => $ttl ],
+				[ 'removeDuplicates' => true ]
+			);
+			$this->jobQueueGroup->lazyPush( $job );
+		}
+
+		return $data === false ? [] : $data;
 	}
 
 	/**
