@@ -21,7 +21,7 @@ class UnlinkedWikibaseLuaLibrary extends LibraryBase {
 		$services = MediaWikiServices::getInstance();
 		$this->config = $services->getMainConfig();
 		$this->cache = $services->getMainWANObjectCache();
-		$this->wikibase = new Wikibase();
+		$this->wikibase = $services->get( 'UnlinkedWikibase.Wikibase' );
 	}
 
 	/**

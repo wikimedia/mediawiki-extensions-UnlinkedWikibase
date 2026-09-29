@@ -8,7 +8,7 @@ use MediaWiki\Title\Title;
 
 class SpecialUnlinkedWikibase extends QueryPage {
 
-	public function __construct() {
+	public function __construct( private readonly Wikibase $wikibase ) {
 		parent::__construct( 'UnlinkedWikibase' );
 	}
 
@@ -19,10 +19,9 @@ class SpecialUnlinkedWikibase extends QueryPage {
 
 	/** @inheritDoc */
 	public function execute( $par ) {
-		$wb = new Wikibase();
-		$queue = $this->msg( 'unlinkedwikibase-special-jobqueue-size', $wb->getJobQueueSize() )->text();
+		$queue = $this->msg( 'unlinkedwikibase-special-jobqueue-size', $this->wikibase->getJobQueueSize() )->text();
 		$out = Html::element( 'p', [], $queue );
-		if ( !$wb->canCache() ) {
+		if ( !$this->wikibase->canCache() ) {
 			$out .= Html::rawElement( 'p', [], $this->msg( 'unlinkedwikibase-special-no-jobs' )->parse() );
 		}
 		$this->getOutput()->addHTML( $out );
@@ -50,11 +49,10 @@ class SpecialUnlinkedWikibase extends QueryPage {
 		$pageTitle = Title::makeTitle( $result->namespace, $result->title );
 		$linkRenderer = $this->getLinkRenderer();
 		$pageLink = $linkRenderer->makeLink( $pageTitle );
-		$wikibase = new Wikibase();
 		$entityId = $result->value;
-		$wikibaseUrl = $wikibase->getEntityUrl( $entityId );
+		$wikibaseUrl = $this->wikibase->getEntityUrl( $entityId );
 		$wikibaseLink = $linkRenderer->makeExternalLink( $wikibaseUrl, $entityId, $this->getFullTitle() );
-		$entity = $wikibase->getEntityData( $entityId );
+		$entity = $this->wikibase->getEntityData( $entityId );
 		$label = '';
 		if ( isset( $entity['labels'][$skin->getLanguageCode()->toBcp47Code()]['value'] ) ) {
 			$label = $entity['labels'][$skin->getLanguageCode()->toBcp47Code()]['value'];

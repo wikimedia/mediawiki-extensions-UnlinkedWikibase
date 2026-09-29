@@ -9,42 +9,31 @@ use MediaWiki\Config\Config;
 use MediaWiki\Http\HttpRequestFactory;
 use MediaWiki\Language\Language;
 use MediaWiki\Languages\LanguageFallback;
-use MediaWiki\MediaWikiServices;
 use MediaWiki\Parser\Parser;
 use MediaWiki\WikiMap\WikiMap;
-use Wikimedia\ObjectCache\BagOStuff;
 use Wikimedia\ObjectCache\WANObjectCache;
 
 class Wikibase {
 
-	private readonly Config $config;
-	private readonly HttpRequestFactory $requestFactory;
-	private readonly WANObjectCache|BagOStuff $cache;
-	private readonly Language $contentLang;
-	private readonly LanguageFallback $langFallback;
-
-	/** @var string[] */
+	/** @var bool[][] Record used entity IDs, grouped by page. */
 	private array $entityIds = [];
 
 	/** @var string[] */
 	private $propIds;
 
-	private readonly JobQueueGroup $jobQueueGroup;
+	public function __construct(
+		private readonly Config $config,
+		private readonly HttpRequestFactory $requestFactory,
+		private readonly WANObjectCache $cache,
+		private readonly Language $contentLang,
+		private readonly LanguageFallback $langFallback,
+		private readonly JobQueueGroup $jobQueueGroup,
+		private readonly bool $cacheIsDurable,
+	) {
+	}
 
-	public function __construct() {
-		$services = MediaWikiServices::getInstance();
-		$this->config = $services->getMainConfig();
-		$this->requestFactory = $services->getHttpRequestFactory();
-		$this->contentLang = $services->getContentLanguage();
-		$this->langFallback = $services->getLanguageFallback();
-		$this->jobQueueGroup = $services->getJobQueueGroupFactory()->makeJobQueueGroup();
-
-		if ( $this->config->get( "UnlinkedWikibaseCache" ) ) {
-			$this->cache = $services->getObjectCacheFactory()->
-				getInstance( $this->config->get( "UnlinkedWikibaseCache" ) );
-		} else {
-			$this->cache = $services->getMainWANObjectCache();
-		}
+	public function getCache(): WANObjectCache {
+		return $this->cache;
 	}
 
 	/**
@@ -76,8 +65,14 @@ class Wikibase {
 	public function getEntity( Parser $parser, string $id ): ?array {
 		$entity = $this->getEntityData( $id );
 		// Add this ID to the list of in-use entities.
-		$this->entityIds[ $id ] = $id;
-		$parser->getOutput()->setPageProperty( Hooks::PAGE_PROP_ENTITIES_USED_PREFIX . count( $this->entityIds ), $id );
+		if ( !isset( $this->entityIds[ $parser->getPage()->getDBkey() ] ) ) {
+			$this->entityIds[ $parser->getPage()->getDBkey() ] = [];
+		}
+		$this->entityIds[ $parser->getPage()->getDBkey() ][ $id ] = true;
+		$parser->getOutput()->setPageProperty(
+			Hooks::PAGE_PROP_ENTITIES_USED_PREFIX . count( $this->entityIds[ $parser->getPage()->getDBkey() ] ),
+			$id
+		);
 		return $entity;
 	}
 
@@ -304,7 +299,7 @@ class Wikibase {
 				return $oldValue ?: [];
 			},
 			// staleTTL also defined in FetchJob.
-			[ 'staleTTL' => BagOStuff::TTL_WEEK ]
+			[ 'staleTTL' => $this->cache::TTL_WEEK ]
 		);
 	}
 
@@ -319,7 +314,7 @@ class Wikibase {
 	 * Is the cache able to store data from the job queue?
 	 */
 	public function canCache(): bool {
-		return $this->cache->getQoS( BagOStuff::ATTR_DURABILITY ) >= BagOStuff::QOS_DURABILITY_SERVICE;
+		return $this->cacheIsDurable;
 	}
 
 	public function fetchWithoutCache( string $url ): array {

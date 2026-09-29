@@ -24,6 +24,9 @@
 	"AutoloadNamespaces": {
 		"MediaWiki\\Extension\\UnlinkedWikibase\\": "includes/"
 	},
+	"ServiceWiringFiles": [
+		"includes/ServiceWiring.php"
+	],
 	"Hooks": {
 		"ScribuntoExternalLibraries": "main",
 		"ParserFirstCallInit": "main",
@@ -38,7 +41,8 @@
 				"MainConfig",
 				"DBLoadBalancerFactory",
 				"LanguageNameUtils",
-				"PageProps"
+				"PageProps",
+				"UnlinkedWikibase.Wikibase"
 			]
 		}
 	},
@@ -46,13 +50,18 @@
 		"UnlinkedWikibaseFetch": {
 			"class": "MediaWiki\\Extension\\UnlinkedWikibase\\FetchJob",
 			"services": [
-				"MainWANObjectCache",
-				"MainConfig"
+				"MainConfig",
+				"UnlinkedWikibase.Wikibase"
 			]
 		}
 	},
 	"SpecialPages": {
-		"UnlinkedWikibase": "MediaWiki\\Extension\\UnlinkedWikibase\\SpecialUnlinkedWikibase"
+		"UnlinkedWikibase": {
+			"class": "MediaWiki\\Extension\\UnlinkedWikibase\\SpecialUnlinkedWikibase",
+			"services": [
+				"UnlinkedWikibase.Wikibase"
+			]
+		}
 	},
 	"config": {
 		"UnlinkedWikibaseBaseUrl": {

@@ -46,6 +46,7 @@ class Hooks implements
 		private readonly LBFactory $connectionProvider,
 		private readonly LanguageNameUtils $languageNameUtils,
 		private readonly PageProps $pageProps,
+		private readonly Wikibase $wikibase,
 	) {
 	}
 
@@ -119,14 +120,13 @@ class Hooks implements
 			return $this->getError( 'unlinkedwikibase-error-statements-entity-not-set' );
 		}
 
-		$wikibase = new Wikibase();
 		$propName = $params[0] ?? '';
-		$propId = $wikibase->getPropertyId( $parser, $propName );
+		$propId = $this->wikibase->getPropertyId( $parser, $propName );
 		if ( !$propId ) {
 			return $this->getError( 'unlinkedwikibase-error-property-name-not-found', [ $propName ] );
 		}
 
-		$entity = $wikibase->getEntity( $parser, $entityId );
+		$entity = $this->wikibase->getEntity( $parser, $entityId );
 		if ( !isset( $entity['claims'][$propId] ) ) {
 			// No claim for this property.
 			return "<!-- No $propName ($propId) property found for $entityId -->";
@@ -150,7 +150,7 @@ class Hooks implements
 					$vals[] = $value;
 				}
 			} else {
-				$vals[] = $wikibase->renderSnak( $parser, $claim['mainsnak'] );
+				$vals[] = $this->wikibase->renderSnak( $parser, $claim['mainsnak'] );
 			}
 		}
 
@@ -248,8 +248,7 @@ class Hooks implements
 			!$this->config->get( MainConfigNames::HideInterlanguageLinks ) &&
 			$parser->getOutput()->getExtensionData( self::LANG_LINKS ) === null
 		) {
-			$wb = new Wikibase;
-			$entity = $wb->getEntity( $parser, $params['id'] );
+			$entity = $this->wikibase->getEntity( $parser, $params['id'] );
 			$langLinks = $this->generateLangLinks( $entity, $parser->getTargetLanguage() );
 			$parser->getOutput()->setExtensionData( self::LANG_LINKS, $langLinks );
 		}

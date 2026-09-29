@@ -4,7 +4,6 @@ namespace MediaWiki\Extension\UnlinkedWikibase\Maintenance;
 
 use Maintenance;
 use MediaWiki\Extension\UnlinkedWikibase\Hooks;
-use MediaWiki\Extension\UnlinkedWikibase\Wikibase;
 
 $IP = getenv( 'MW_INSTALL_PATH' );
 if ( $IP === false ) {
@@ -18,7 +17,7 @@ class UpdateEntities extends Maintenance {
 		parent::__construct();
 		$this->requireExtension( 'UnlinkedWikibase' );
 		$this->parameters->setDescription( "Refresh the UnlinkedWikibase cache of entities' data" );
-		$this->setBatchSize( 100 );
+		$this->setBatchSize( 50 );
 	}
 
 	public function execute() {
@@ -31,8 +30,8 @@ class UpdateEntities extends Maintenance {
 		}
 		$dbr = $this->getDB( DB_REPLICA );
 		$previousQid = 'Q0';
-		$wikibase = new Wikibase();
-		$cache = $this->getServiceContainer()->getMainWANObjectCache();
+		$wikibase = $this->getServiceContainer()->get( 'UnlinkedWikibase.Wikibase' );
+		$cache = $wikibase->getCache();
 		do {
 			$rows = $dbr->newSelectQueryBuilder()
 				->select( [ 'pp_value' ] )
