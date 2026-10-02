@@ -16,7 +16,7 @@ return [
 			$wanObjectCache = new WANObjectCache( [ 'cache' => $store, 'logger' => $store->getLogger() ] );
 		} else {
 			$store = $cacheFactory->getInstance( $config->get( MainConfigNames::MainCacheType ) );
-			$wanObjectCache = $services->getWANObjectCache();
+			$wanObjectCache = $services->getMainWANObjectCache();
 		}
 		return new Wikibase(
 			$config,
