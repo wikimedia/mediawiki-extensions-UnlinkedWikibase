@@ -6,7 +6,7 @@
 	"license-name": "GPL-2.0-or-later",
 	"namemsg": "unlinkedwikibase",
 	"descriptionmsg": "unlinkedwikibase-desc",
-	"version": "4.0.0",
+	"version": "4.1.0",
 	"url": "https://www.mediawiki.org/wiki/Special:MyLanguage/Extension:UnlinkedWikibase",
 	"type": "other",
 	"requires": {
@@ -74,11 +74,11 @@
 		},
 		"UnlinkedWikibaseEntityTTL": {
 			"description": "The cache lifetime (in seconds) for individual entities. Set to null when the UnlinkedWikibaseUpdateEntities script is used to update the data.",
-			"value": "3600"
+			"value": "86400"
 		},
 		"UnlinkedWikibaseQueryTTL": {
 			"description": "The cache lifetime (in seconds) for Sparql queries.",
-			"value": "3600"
+			"value": "86400"
 		},
 		"UnlinkedWikibaseStatementsParserFunc": {
 			"description": "DEPRECATED: Use UnlinkedWikibaseImitationMode instead. Whether to enable the {{#statements:}} parser function.",
