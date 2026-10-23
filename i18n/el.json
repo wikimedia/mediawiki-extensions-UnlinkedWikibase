@@ -1,0 +1,13 @@
+{
+	"@metadata": {
+		"authors": [
+			"Jimkats"
+		]
+	},
+	"unlinkedwikibase-error-missing-id": "Πρέπει να δοθεί η παράμετρος 'id'.",
+	"unlinkedwikibase-error-missing-property": "Απαιτείται παράμετρος ιδιότητας.",
+	"unlinkedwikibase-error-property-name-not-found": "Η ιδιότητα '$1' δεν βρέθηκε.",
+	"unlinkedwikibase-sidebar-link": "Οντότητα Wikibase",
+	"unlinkedwikibase-infoaction-label": "Αναγνωριστικό οντότητας Wikibase",
+	"unlinkedwikibase-infoaction-other-usage": "(χρήση σε $1 {{PLURAL:$1|σελίδα|σελίδες}})"
+}
