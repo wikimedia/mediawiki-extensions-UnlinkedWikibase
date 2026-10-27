@@ -1,0 +1,15 @@
+{
+	"@metadata": {
+		"authors": [
+			"Wizzard"
+		]
+	},
+	"unlinkedwikibase": "UnlinkedWikibase",
+	"unlinkedwikibase-error-label": "Chyba UnlinkedWikibase:",
+	"unlinkedwikibase-error-missing-id": "Parameter „id“ musí byť zadaný.",
+	"unlinkedwikibase-error-invalid-id": "ID „$1“ nemá požadovaný formát celého čísla s predponou „Q“.",
+	"unlinkedwikibase-error-property-name-not-found": "Vlastnosť „$1“ sa nenašla.",
+	"unlinkedwikibase-sidebar-link": "Entita Wikibase",
+	"unlinkedwikibase-infoaction-label": "ID entity Wikibase",
+	"unlinkedwikibase-infoaction-other-usage": "(použité na $1 {{PLURAL:$1|stránke|stránkach|stránkach}})"
+}
