@@ -1,0 +1,18 @@
+{
+	"@metadata": {
+		"authors": [
+			"Wizzard"
+		]
+	},
+	"unlinkedwikibase": "UnlinkedWikibase",
+	"unlinkedwikibase-desc": "Prístup k údajom entít Wikibase z wiki, ktoré nie sú prepojené so stránkou Wikibase.",
+	"unlinkedwikibase-error-label": "Chyba UnlinkedWikibase:",
+	"unlinkedwikibase-error-missing-id": "Parameter „id“ musí byť zadaný.",
+	"unlinkedwikibase-error-invalid-id": "ID „$1“ nemá požadovaný formát celého čísla s predponou „Q“.",
+	"unlinkedwikibase-error-property-name-not-found": "Vlastnosť „$1“ sa nenašla.",
+	"unlinkedwikibase-sidebar-link": "Entita Wikibase",
+	"unlinkedwikibase-infoaction-label": "ID entity Wikibase",
+	"unlinkedwikibase-infoaction-other-usage": "(použité na $1 {{PLURAL:$1|stránke|stránkach|stránkach}})",
+	"unlinkedwikibase-special-jobqueue-size": "Veľkosť fronty úloh UnlinkedWikibase: $1",
+	"unlinkedwikibase-special-no-jobs": "[[mw:Object cache#WAN_cache|Vyrovnávacia pamäť stránky]] nie je nakonfigurovaná na použitie fronty úloh pri získavaní údajov, takže stránky používajúce UnlinkedWikibase sa môžu načítavať pomaly."
+}
